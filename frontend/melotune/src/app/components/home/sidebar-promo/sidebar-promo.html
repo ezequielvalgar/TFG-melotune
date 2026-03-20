@@ -1,0 +1,26 @@
+<div class="d-flex flex-column gap-4" style="margin-top: 3.5rem;">
+  <!-- Tarjeta Promocional Roja -->
+  <div class="bg-accent-red rounded-4 p-5 text-center d-flex flex-column justify-content-center align-items-center mb-2" style="aspect-ratio: 1; box-shadow: 0 10px 30px rgba(255, 51, 68, 0.2);">
+    <h2 class="text-white fw-black mb-3" style="font-size: 3rem; font-weight: 900; line-height: 1;">OUT<br>NOW</h2>
+    <p class="text-white mb-4" style="font-size: 0.9rem;">Descubre los últimos lanzamientos</p>
+    <button class="btn btn-outline-light px-4 py-2" style="border-radius: 6px; font-weight: 600; letter-spacing: 1px;">EXPLORAR</button>
+  </div>
+
+  <!-- Top Álbumes -->
+  <div>
+    <h4 class="section-title text-white mb-4">TOP ÁLBUMES</h4>
+    <div class="d-flex flex-column gap-3">
+      <div class="d-flex align-items-center" *ngFor="let album of topAlbums; let i = index">
+        <span class="fs-6 fw-bold text-secondary me-3" style="min-width: 15px;">{{ i + 1 }}</span>
+        <div class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 45px; height: 45px;">
+          <img [src]="album.image" class="w-100 h-100 object-fit-cover" alt="Album Cover">
+        </div>
+        <div class="flex-grow-1">
+          <h6 class="fw-bold mb-0 text-white" style="font-size: 0.9rem;">{{ album.title }}</h6>
+          <span class="text-secondary" style="font-size: 0.8rem;">{{ album.artist }}</span>
+        </div>
+        <span class="fw-bold text-white fs-6">{{ album.score }}</span>
+      </div>
+    </div>
+  </div>
+</div>

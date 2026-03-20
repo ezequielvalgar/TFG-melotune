@@ -1,0 +1,22 @@
+<div class="mb-5">
+  <h2 class="section-title mb-4"><i class="fa-solid fa-arrow-trend-up text-accent-red"></i> ARTISTAS POPULARES</h2>
+  
+  <div class="mt-card p-2 px-3">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center py-3 border-bottom position-relative" style="border-color: var(--card-border) !important;" *ngFor="let artist of popularArtists; let last = last; let i = index" [class.border-bottom-0]="last">
+        <span class="list-item-rank" style="min-width: 25px;">{{ i + 1 }}</span>
+        <div class="rounded overflow-hidden me-3" style="width: 40px; height: 40px;">
+          <img [src]="artist.image" class="w-100 h-100 object-fit-cover" alt="Artist">
+        </div>
+        <i class="fa-solid fa-music text-secondary me-3"></i>
+        <h5 class="fw-bold fs-6 mb-0 text-white flex-grow-1 text-uppercase">{{ artist.name }}</h5>
+        
+        <span class="text-secondary d-none d-md-block" style="font-size: 0.85rem; margin-right: 3rem;">{{ artist.genre }}</span>
+        <div class="d-flex align-items-center me-2">
+          <i class="fa-solid fa-star text-warning-custom me-2"></i>
+          <span class="fw-bold fs-6">{{ artist.rating }}/5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

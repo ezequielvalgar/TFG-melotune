@@ -1,0 +1,39 @@
+<div class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="section-title mb-0"><i class="fa-regular fa-star text-accent-red"></i> ÚLTIMAS RESEÑAS</h2>
+    <a href="#" class="link-see-all text-decoration-none">VER TODAS <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+
+  <div class="d-flex flex-column gap-3">
+    <div class="mt-card p-4" *ngFor="let review of latestReviews">
+      <div class="d-flex">
+        <!-- Portada del Álbum -->
+        <div class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 50px; height: 50px;">
+          <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" alt="Album Cover">
+        </div>
+        
+        <div class="flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h6 class="fw-bold mb-0 text-white">{{ review.albumTitle }} <span class="text-secondary fw-normal"> — {{ review.artist }}</span></h6>
+              <div class="d-flex align-items-center mt-1">
+                <img [src]="review.userAvatar" class="rounded-circle me-2" style="width: 16px; height: 16px;" alt="Avatar">
+                <span class="text-secondary" style="font-size: 0.8rem;">{{ review.username }} <span class="mx-1">•</span> {{ review.date }}</span>
+              </div>
+            </div>
+            <div class="text-warning-custom fs-6">
+              <i class="fa-solid fa-star me-1" *ngFor="let star of [1,2,3,4,5]"></i>
+            </div>
+          </div>
+
+          <h5 class="fw-bold text-white fs-6 mt-3 mb-2">{{ review.reviewTitle }}</h5>
+          <p class="review-card-text mb-3" style="line-height: 1.6;">{{ review.content }}</p>
+          
+          <div class="d-flex align-items-center text-secondary" style="font-size: 0.85rem;">
+            <i class="fa-regular fa-heart me-1"></i> {{ review.likes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
