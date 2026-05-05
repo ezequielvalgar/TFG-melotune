@@ -36,11 +36,20 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $user = User::find($id);
-        if (!$user) return response()->json(['message' => 'Not found'], 404);
-        return $user;
+        $user = User::findOrFail($id);
+
+        return response()->json([
+            'id'          => $user->id,
+            'username'    => $user->username,
+            'nombre'      => $user->nombre,
+            'foto_perfil' => $user->foto_perfil,
+            'bio'         => $user->bio,
+            'created_at'  => $user->created_at,
+            'followers_count' => $user->followersCount(),
+            'following_count' => $user->followingCount(),
+        ]);
     }
 
     /**

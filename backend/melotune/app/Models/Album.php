@@ -2,35 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Album extends Model
 {
-    use HasFactory;
-
     protected $table = 'albumes';
     public $timestamps = false;
 
     protected $fillable = [
-        'titulo',
-        'artista_id',
-        'fecha_lanzamiento',
-        'genero',
-        'portada',
-        'duracion',
-        'discografica',
-        'descripcion',
+        'titulo', 'artista_id', 'artista_nombre', 'fecha_lanzamiento',
+        'genero', 'portada', 'imagen_url', 'duracion', 'discografica', 'descripcion'
     ];
 
     public function artista()
     {
         return $this->belongsTo(Artista::class, 'artista_id');
-    }
-
-    public function canciones()
-    {
-        return $this->hasMany(Cancion::class, 'album_id');
     }
 
     public function reviews()

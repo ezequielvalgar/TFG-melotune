@@ -1,0 +1,224 @@
+/* Avatar de Perfil */
+.profile-avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255,255,255,0.15);
+  box-shadow: 0 0 0 3px var(--accent-red);
+}
+
+.profile-edit-btn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--accent-red);
+  border: 2px solid var(--dark-bg, #0e0f1a);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.profile-edit-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Stats inline en la cabecera */
+.profile-stat-inline {
+  font-size: 0.88rem;
+}
+
+/* Barra de Tabs */
+.profile-tabs-bar {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0;
+}
+
+.profile-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.profile-tab:hover {
+  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255,255,255,0.03);
+}
+
+.profile-tab.active {
+  color: #fff;
+  border-bottom-color: var(--accent-red);
+}
+
+/* Botones lista/grid */
+.btn-group-view {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  display: flex;
+  overflow: hidden;
+}
+
+.btn-view {
+  background-color: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-view:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.btn-view.active { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* Review card */
+.review-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.review-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+}
+
+/* Tags dentro de reseña */
+.tag-badge-sm {
+  background-color: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+  padding: 0.2rem 0.7rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Like button */
+.like-btn {
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+/* Grid de álbumes */
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.25rem;
+}
+
+.albums-grid-wide {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.album-grid-cover {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background-color: rgba(255,255,255,0.03);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.album-grid-item:hover .album-grid-cover {
+  transform: scale(1.03);
+}
+
+/* Grid de Estadísticas */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card-value {
+  font-size: 1.75rem;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.stat-card-label {
+  font-size: 0.8rem;
+}
+
+/* Sección con fondo oscuro (Distribución, Géneros) */
+.section-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+
+/* Géneros Pill */
+.genre-pill {
+  padding: 0.4rem 1.1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.65);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.genre-pill:hover, .genre-pill-active {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+  color: #fff;
+}
+
+/* ===== Follow Modal & Counters ===== */
+.follow-counter {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.follow-counter:hover {
+  opacity: 0.75;
+}
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-custom {
+  width: 100%;
+  max-width: 420px;
+  max-height: 70vh;
+  overflow-y: auto;
+  border-radius: 12px;
+}

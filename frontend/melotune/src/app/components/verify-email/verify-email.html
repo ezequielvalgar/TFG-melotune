@@ -1,0 +1,35 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100 py-5">
+  <div class="verification-card p-5 text-center text-white" style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; max-width: 500px; width: 100%;">
+    
+    <div class="mb-4">
+      <h2 class="fw-bold tracking-widest text-white m-0" style="letter-spacing: 2px;">
+        <span class="text-accent-red me-2"><i class="fa-solid fa-music"></i></span>MELOTUNE
+      </h2>
+    </div>
+
+    <div *ngIf="status === 'loading'" class="py-4">
+      <i class="fa-solid fa-spinner fa-spin text-accent-red" style="font-size: 3rem;"></i>
+      <h4 class="mt-4 fw-bold">Verificando tu cuenta</h4>
+      <p class="text-secondary mt-2">{{ message }}</p>
+    </div>
+
+    <div *ngIf="status === 'success'" class="py-4">
+      <i class="fa-solid fa-circle-check text-success" style="font-size: 4rem;"></i>
+      <h4 class="mt-4 fw-bold">¡Cuenta Verificada!</h4>
+      <p class="text-secondary mt-2">{{ message }}</p>
+      <a routerLink="/login" class="btn w-100 fw-bold text-white mt-4" style="background-color: var(--accent-red); padding: 0.75rem;">
+        Ir a Iniciar Sesión
+      </a>
+    </div>
+
+    <div *ngIf="status === 'error'" class="py-4">
+      <i class="fa-solid fa-circle-xmark text-danger" style="font-size: 4rem;"></i>
+      <h4 class="mt-4 fw-bold">Error de Verificación</h4>
+      <p class="text-secondary mt-2">{{ message }}</p>
+      <a routerLink="/login" class="btn btn-outline-light w-100 fw-bold mt-4" style="padding: 0.75rem;">
+        Volver a Iniciar Sesión
+      </a>
+    </div>
+
+  </div>
+</div>

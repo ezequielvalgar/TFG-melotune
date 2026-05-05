@@ -1,0 +1,74 @@
+/* Toggle activo con color accent-red */
+.form-check-input:checked {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(232, 62, 140, 0.25);
+  border-color: var(--accent-red);
+}
+
+.form-check-input {
+  width: 2.5em;
+  height: 1.35em;
+  cursor: pointer;
+}
+
+/* Botón guardar */
+.btn-accent-red {
+  background-color: var(--accent-red);
+  border: none;
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s ease;
+  border-radius: 12px;
+}
+
+.btn-accent-red:hover {
+  opacity: 0.88;
+  color: #fff;
+}
+
+/* Select personalizado */
+.form-select {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px;
+}
+
+.form-select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(232, 62, 140, 0.2);
+  border-color: var(--accent-red) !important;
+}
+
+/* Toast de confirmación */
+.settings-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #1e2035;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.settings-toast.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.settings-toast i {
+  color: var(--accent-red);
+}

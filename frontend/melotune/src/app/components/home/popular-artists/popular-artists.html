@@ -3,20 +3,39 @@
   
   <div class="mt-card p-2 px-3">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center py-3 border-bottom position-relative" style="border-color: var(--card-border) !important;" *ngFor="let artist of popularArtists; let last = last; let i = index" [class.border-bottom-0]="last">
-        <span class="list-item-rank" style="min-width: 25px;">{{ i + 1 }}</span>
-        <div class="rounded overflow-hidden me-3" style="width: 40px; height: 40px;">
-          <img [src]="artist.image" class="w-100 h-100 object-fit-cover" alt="Artist">
+
+      <!-- Skeleton loader -->
+      <ng-container *ngIf="isLoading">
+        <div class="d-flex align-items-center py-2" *ngFor="let s of [1,2,3,4,5,6]" [class.border-bottom]="s !== 6" [class.border-secondary]="s !== 6">
+          <span class="fs-6 fw-bold text-secondary me-3" style="min-width: 20px;">{{ s }}</span>
+          <div class="skeleton-pulse rounded-circle me-3 flex-shrink-0" style="width: 45px; height: 45px;"></div>
+          <div class="flex-grow-1">
+            <div class="skeleton-pulse rounded mb-1" style="height: 14px; width: 120px;"></div>
+            <div class="skeleton-pulse rounded" style="height: 12px; width: 180px;"></div>
+          </div>
         </div>
-        <i class="fa-solid fa-music text-secondary me-3"></i>
-        <h5 class="fw-bold fs-6 mb-0 text-white flex-grow-1 text-uppercase">{{ artist.name }}</h5>
-        
-        <span class="text-secondary d-none d-md-block" style="font-size: 0.85rem; margin-right: 3rem;">{{ artist.genre }}</span>
-        <div class="d-flex align-items-center me-2">
-          <i class="fa-solid fa-star text-warning-custom me-2"></i>
-          <span class="fw-bold fs-6">{{ artist.rating }}/5</span>
-        </div>
-      </div>
+      </ng-container>
+
+      <ng-container *ngIf="!isLoading">
+        <a [routerLink]="['/artist', artist.name]" class="d-flex align-items-center py-2 text-decoration-none w-100" *ngFor="let artist of popularArtists; let i = index; let last = last" [ngClass]="{'border-bottom border-secondary border-opacity-25 pb-3 mb-1': !last}">
+          <span class="fs-6 fw-bold text-secondary me-3" style="min-width: 20px;">{{ i + 1 }}</span>
+          
+          <div class="rounded-circle overflow-hidden me-3 flex-shrink-0" style="width: 45px; height: 45px;">
+            <img [src]="artist.image || 'https://placehold.co/100x100/222436/60658a?text=Foto'" class="w-100 h-100 object-fit-cover" [alt]="artist.name">
+          </div>
+          
+          <div class="flex-grow-1">
+            <h6 class="fw-bold mb-0 text-white" style="font-size: 0.95rem;">{{ artist.name }}</h6>
+            <span class="text-secondary" style="font-size: 0.8rem;">Oyentes mensuales: {{ (artist.listeners | number) || artist.genre }}</span>
+          </div>
+          
+          <p class="mb-0 text-secondary" style="font-size: 0.78rem;">
+              <i class="fa-solid fa-headphones text-accent-red me-1" style="font-size: 0.72rem;"></i>
+              {{ formatListeners(artist.listeners) }}
+          </p>
+        </a>
+      </ng-container>
+      
     </div>
   </div>
 </div>

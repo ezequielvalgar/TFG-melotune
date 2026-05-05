@@ -1,0 +1,185 @@
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="mb-5">
+        <h1 class="section-title mb-1">
+            <i class="fa-solid fa-users text-accent-red"></i> AMIGOS
+        </h1>
+        <p class="text-secondary">Actividad reciente de los usuarios que sigues</p>
+    </div>
+
+    <!-- Estado vacío: no sigues a nadie -->
+    <div *ngIf="isEmpty && !isLoadingReviews" class="text-center py-5">
+        <i class="fa-solid fa-user-group text-secondary mb-3" style="font-size:3rem;"></i>
+        <h4 class="text-white mb-2">Aún no sigues a nadie</h4>
+        <p class="text-secondary mb-4">Sigue a otros usuarios para ver su actividad aquí</p>
+        <a [routerLink]="['/']" class="btn bg-accent-red text-white px-4 rounded-pill">
+            Descubrir usuarios
+        </a>
+    </div>
+
+    <!-- Tabs -->
+    <div *ngIf="!isEmpty || isLoadingReviews">
+
+        <ul class="nav nav-tabs border-0 mb-4 gap-2">
+            <li class="nav-item">
+                <button class="nav-link px-4 py-2 rounded-pill fw-bold"
+                        [ngClass]="activeTab === 'reviews' ? 'bg-accent-red text-white border-0' : 'text-secondary border-0 bg-transparent'"
+                        (click)="setTab('reviews')">
+                    <i class="fa-regular fa-star me-2"></i>Reseñas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link px-4 py-2 rounded-pill fw-bold"
+                        [ngClass]="activeTab === 'saved' ? 'bg-accent-red text-white border-0' : 'text-secondary border-0 bg-transparent'"
+                        (click)="setTab('saved')">
+                    <i class="fa-regular fa-bookmark me-2"></i>Guardados
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link px-4 py-2 rounded-pill fw-bold"
+                        [ngClass]="activeTab === 'favorites' ? 'bg-accent-red text-white border-0' : 'text-secondary border-0 bg-transparent'"
+                        (click)="setTab('favorites')">
+                    <i class="fa-regular fa-heart me-2"></i>Favoritos
+                </button>
+            </li>
+        </ul>
+
+        <!-- TAB: Reseñas -->
+        <div *ngIf="activeTab === 'reviews'">
+            <div *ngIf="isLoadingReviews" class="d-flex flex-column gap-4">
+                <div class="mt-card p-4" *ngFor="let s of [1,2,3]">
+                    <div class="d-flex mb-3">
+                        <div class="skeleton-pulse rounded me-3" style="width:80px;height:80px;"></div>
+                        <div class="flex-grow-1">
+                            <div class="skeleton-pulse rounded mb-2" style="height:16px;width:40%;"></div>
+                            <div class="skeleton-pulse rounded" style="height:12px;width:25%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoadingReviews && reviews.length === 0" class="text-center py-5">
+                <p class="text-secondary">Los usuarios que sigues aún no han escrito reseñas.</p>
+            </div>
+
+            <div class="d-flex flex-column gap-4" *ngIf="!isLoadingReviews && reviews.length > 0">
+                <div class="mt-card p-4" *ngFor="let review of reviews">
+                    <div class="d-flex mb-3">
+                        <a [routerLink]="['/album', review.artist, review.albumTitle]"
+                           class="rounded overflow-hidden me-3 flex-shrink-0 text-decoration-none"
+                           style="width:80px;height:80px;">
+                            <img [src]="review.albumImage || 'https://placehold.co/80/222436/60658a?text=No+Cover'"
+                                 class="w-100 h-100 object-fit-cover" [alt]="review.albumTitle">
+                        </a>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <a [routerLink]="['/album', review.artist, review.albumTitle]"
+                                       class="text-decoration-none">
+                                        <h6 class="fw-bold mb-0 text-white">
+                                            {{ review.albumTitle }}
+                                            <span class="text-secondary fw-normal"> — {{ review.artist }}</span>
+                                        </h6>
+                                    </a>
+                                    <a [routerLink]="['/profile', review.userId]"
+                                       class="text-decoration-none d-flex align-items-center mt-1">
+                                        <img [src]="review.userAvatar || 'https://ui-avatars.com/api/?name=' + review.username + '&background=1a1c2e&color=E83E8C'"
+                                             class="rounded-circle me-2 object-fit-cover"
+                                             style="width:20px;height:20px;">
+                                        <span class="text-secondary" style="font-size:0.8rem;">
+                                            {{ review.username }} • {{ review.date }}
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="d-flex align-items-center bg-dark bg-opacity-50 px-2 py-1 rounded">
+                                    <span class="fw-bold text-white me-2" style="font-size:0.9rem;">{{ review.rating }}</span>
+                                    <div class="text-warning-custom d-flex" style="font-size:0.75rem;">
+                                        <i class="fa-solid fa-star" *ngFor="let s of fullStars(review.rating)"></i>
+                                        <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(review.rating)"></i>
+                                        <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(review.rating)"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="fw-bold text-white fs-6 mt-3 mb-2">{{ review.reviewTitle }}</h5>
+                            <p class="text-secondary mb-0" style="font-size:0.88rem;line-height:1.6;">
+                                {{ review.content }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Guardados -->
+        <div *ngIf="activeTab === 'saved'">
+            <div *ngIf="isLoadingSaved" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+                <div class="col" *ngFor="let s of [1,2,3,4,5,6,7,8]">
+                    <div class="skeleton-pulse rounded" style="aspect-ratio:1;"></div>
+                    <div class="skeleton-pulse rounded mt-2" style="height:12px;width:80%;"></div>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoadingSaved && savedAlbums.length === 0" class="text-center py-5">
+                <p class="text-secondary">Los usuarios que sigues aún no han guardado álbumes.</p>
+            </div>
+
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4" *ngIf="!isLoadingSaved && savedAlbums.length > 0">
+                <div class="col" *ngFor="let album of savedAlbums">
+                    <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+                        <div class="mt-card overflow-hidden rounded mb-2" style="aspect-ratio:1;">
+                            <img [src]="album.image || 'https://placehold.co/300/222436/60658a?text=No+Cover'"
+                                 class="w-100 h-100 object-fit-cover" [alt]="album.title">
+                        </div>
+                        <p class="mb-0 text-white fw-bold text-truncate" style="font-size:0.875rem;">{{ album.title }}</p>
+                        <p class="mb-0 text-secondary text-truncate" style="font-size:0.78rem;">{{ album.artist }}</p>
+                        <a [routerLink]="['/profile', album.userId]"
+                           class="text-decoration-none d-flex align-items-center mt-1 gap-1"
+                           (click)="$event.stopPropagation()">
+                            <img [src]="album.userAvatar || 'https://ui-avatars.com/api/?name=' + album.username + '&background=1a1c2e&color=E83E8C'"
+                                 class="rounded-circle object-fit-cover"
+                                 style="width:16px;height:16px;">
+                            <span class="text-secondary" style="font-size:0.72rem;">{{ album.username }}</span>
+                        </a>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Favoritos -->
+        <div *ngIf="activeTab === 'favorites'">
+            <div *ngIf="isLoadingFavorites" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+                <div class="col" *ngFor="let s of [1,2,3,4,5,6,7,8]">
+                    <div class="skeleton-pulse rounded" style="aspect-ratio:1;"></div>
+                    <div class="skeleton-pulse rounded mt-2" style="height:12px;width:80%;"></div>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoadingFavorites && favoriteAlbums.length === 0" class="text-center py-5">
+                <p class="text-secondary">Los usuarios que sigues aún no han marcado favoritos.</p>
+            </div>
+
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4" *ngIf="!isLoadingFavorites && favoriteAlbums.length > 0">
+                <div class="col" *ngFor="let album of favoriteAlbums">
+                    <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+                        <div class="mt-card overflow-hidden rounded mb-2" style="aspect-ratio:1;">
+                            <img [src]="album.image || 'https://placehold.co/300/222436/60658a?text=No+Cover'"
+                                 class="w-100 h-100 object-fit-cover" [alt]="album.title">
+                        </div>
+                        <p class="mb-0 text-white fw-bold text-truncate" style="font-size:0.875rem;">{{ album.title }}</p>
+                        <p class="mb-0 text-secondary text-truncate" style="font-size:0.78rem;">{{ album.artist }}</p>
+                        <a [routerLink]="['/profile', album.userId]"
+                           class="text-decoration-none d-flex align-items-center mt-1 gap-1"
+                           (click)="$event.stopPropagation()">
+                            <img [src]="album.userAvatar || 'https://ui-avatars.com/api/?name=' + album.username + '&background=1a1c2e&color=E83E8C'"
+                                 class="rounded-circle object-fit-cover"
+                                 style="width:16px;height:16px;">
+                            <span class="text-secondary" style="font-size:0.72rem;">{{ album.username }}</span>
+                        </a>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

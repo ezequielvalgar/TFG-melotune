@@ -24,12 +24,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $username = fake()->unique()->userName();
+        
         return [
-            'name' => fake()->name(),
+            'username' => $username,
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'nombre' => fake()->name(),
+            'bio' => fake()->realText(100),
+            'foto_perfil' => null, // Dejamos que el accesor genere el avatar por UI-Avatars
+            'fecha_registro' => fake()->dateTimeBetween('-1 year', 'now'),
+            'activo' => 1,
+            'email_verified_at' => now(),
         ];
     }
 

@@ -1,0 +1,9 @@
+.search-user-item {
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.search-user-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}

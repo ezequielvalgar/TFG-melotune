@@ -1,0 +1,214 @@
+<div class="cookies-wrapper">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="policy-header">
+      <div class="policy-badge">
+        <i class="fa-solid fa-cookie-bite"></i>
+        Última actualización: Abril 2026
+      </div>
+      <h1 class="policy-title">Política de Cookies</h1>
+      <p class="policy-subtitle">
+        Utilizamos cookies para mejorar tu experiencia en MELOTUNE. Aquí puedes conocer qué
+        cookies usamos y gestionar tus preferencias.
+      </p>
+    </div>
+
+    <!-- What are cookies -->
+    <div class="what-card mt-card">
+      <h2 class="what-title">¿Qué son las cookies?</h2>
+      <p class="what-text">
+        Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas un sitio web. Nos
+        permiten recordar tus preferencias, mantener tu sesión iniciada y entender cómo usas nuestra plataforma.
+      </p>
+      <p class="what-text">
+        Algunas cookies son esenciales para el funcionamiento del sitio, mientras que otras nos ayudan a mejorar tu
+        experiencia o mostrarte contenido personalizado.
+      </p>
+    </div>
+
+    <!-- Manage Preferences -->
+    <div class="prefs-header">
+      <h2 class="prefs-title">Gestionar preferencias</h2>
+      <div class="prefs-actions">
+        <button class="btn-reject" (click)="rejectOptional()" id="reject-optional-btn">Rechazar opcionales</button>
+        <button class="btn-accept-all" (click)="acceptAll()" id="accept-all-btn">Aceptar todas</button>
+      </div>
+    </div>
+
+    <!-- Essential Cookies -->
+    <div class="cookie-category mt-card">
+      <div class="category-header">
+        <div class="category-left">
+          <i class="fa-solid fa-circle-check category-icon essential-icon"></i>
+          <div>
+            <h3 class="category-name">Cookies esenciales</h3>
+            <p class="category-desc">Estas cookies son necesarias para que el sitio web funcione correctamente. No se
+              pueden desactivar.</p>
+          </div>
+        </div>
+        <span class="always-active-badge">Siempre activas</span>
+      </div>
+
+      <div class="cookie-list">
+        <div class="cookie-list-header">COOKIES EN ESTA CATEGORÍA</div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">session_id</code>
+            <p class="cookie-purpose">Mantiene tu sesión iniciada</p>
+          </div>
+          <span class="cookie-duration">Sesión</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">csrf_token</code>
+            <p class="cookie-purpose">Protección contra ataques CSRF</p>
+          </div>
+          <span class="cookie-duration">Sesión</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">cookie_consent</code>
+            <p class="cookie-purpose">Recuerda tus preferencias de cookies</p>
+          </div>
+          <span class="cookie-duration">1 año</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Functional Cookies -->
+    <div class="cookie-category mt-card">
+      <div class="category-header">
+        <div class="category-left">
+          <i class="fa-solid fa-sliders category-icon functional-icon"></i>
+          <div>
+            <h3 class="category-name">Cookies funcionales</h3>
+            <p class="category-desc">Permiten funcionalidades mejoradas como recordar tus preferencias de idioma o tema.
+            </p>
+          </div>
+        </div>
+        <button class="toggle-btn" [class.enabled]="functionalEnabled()" (click)="toggleFunctional()"
+          id="toggle-functional-btn"
+          [attr.aria-label]="functionalEnabled() ? 'Desactivar cookies funcionales' : 'Activar cookies funcionales'">
+          <span class="toggle-thumb"></span>
+        </button>
+      </div>
+
+      <div class="cookie-list" [class.dimmed]="!functionalEnabled()">
+        <div class="cookie-list-header">COOKIES EN ESTA CATEGORÍA</div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">theme</code>
+            <p class="cookie-purpose">Recuerda tu preferencia de tema (claro/oscuro)</p>
+          </div>
+          <span class="cookie-duration">1 año</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">language</code>
+            <p class="cookie-purpose">Guarda tu idioma preferido</p>
+          </div>
+          <span class="cookie-duration">1 año</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">recent_searches</code>
+            <p class="cookie-purpose">Almacena tus búsquedas recientes</p>
+          </div>
+          <span class="cookie-duration">30 días</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Cookies -->
+    <div class="cookie-category mt-card">
+      <div class="category-header">
+        <div class="category-left">
+          <i class="fa-solid fa-chart-bar category-icon analytics-icon"></i>
+          <div>
+            <h3 class="category-name">Cookies de analítica</h3>
+            <p class="category-desc">Nos ayudan a entender cómo los usuarios interactúan con MELOTUNE para mejorar la
+              experiencia.</p>
+          </div>
+        </div>
+        <button class="toggle-btn" [class.enabled]="analyticsEnabled()" (click)="toggleAnalytics()"
+          id="toggle-analytics-btn"
+          [attr.aria-label]="analyticsEnabled() ? 'Desactivar cookies de analítica' : 'Activar cookies de analítica'">
+          <span class="toggle-thumb"></span>
+        </button>
+      </div>
+
+      <div class="cookie-list" [class.dimmed]="!analyticsEnabled()">
+        <div class="cookie-list-header">COOKIES EN ESTA CATEGORÍA</div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">_ga</code>
+            <p class="cookie-purpose">Google Analytics - Identificador único</p>
+          </div>
+          <span class="cookie-duration">2 años</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">_gid</code>
+            <p class="cookie-purpose">Google Analytics - Identificador de sesión</p>
+          </div>
+          <span class="cookie-duration">24 horas</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">plausible_user</code>
+            <p class="cookie-purpose">Analítica anónima de uso</p>
+          </div>
+          <span class="cookie-duration">1 año</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketing Cookies -->
+    <div class="cookie-category mt-card last-category">
+      <div class="category-header">
+        <div class="category-left">
+          <i class="fa-solid fa-bullhorn category-icon marketing-icon"></i>
+          <div>
+            <h3 class="category-name">Cookies de marketing</h3>
+            <p class="category-desc">Se utilizan para mostrarte contenido y anuncios relevantes basados en tus
+              intereses.</p>
+          </div>
+        </div>
+        <button class="toggle-btn" [class.enabled]="marketingEnabled()" (click)="toggleMarketing()"
+          id="toggle-marketing-btn"
+          [attr.aria-label]="marketingEnabled() ? 'Desactivar cookies de marketing' : 'Activar cookies de marketing'">
+          <span class="toggle-thumb"></span>
+        </button>
+      </div>
+
+      <div class="cookie-list" [class.dimmed]="!marketingEnabled()">
+        <div class="cookie-list-header">COOKIES EN ESTA CATEGORÍA</div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">_fbp</code>
+            <p class="cookie-purpose">Facebook Pixel - Seguimiento de conversiones</p>
+          </div>
+          <span class="cookie-duration">3 meses</span>
+        </div>
+        <div class="cookie-row">
+          <div>
+            <code class="cookie-name">ads_session</code>
+            <p class="cookie-purpose">Personalización de anuncios</p>
+          </div>
+          <span class="cookie-duration">6 meses</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info box -->
+    <div class="info-box mt-card">
+      <i class="fa-solid fa-circle-info info-icon"></i>
+      <p class="info-text">
+        Puedes cambiar tus preferencias de cookies en cualquier momento. Para más información sobre cómo usamos
+        tus datos, consulta nuestra <a routerLink="/privacidad" class="info-link">Política de Privacidad</a>.
+      </p>
+    </div>
+
+  </div>
+</div>

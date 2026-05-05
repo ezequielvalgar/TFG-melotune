@@ -1,0 +1,92 @@
+<div class="artist-page">
+
+    <!-- Hero con imagen de fondo -->
+    <div class="artist-hero" [style.background-image]="artist ? 'url(' + artist.image + ')' : 'none'">
+        <div class="artist-hero-overlay">
+            <div class="container">
+                <a [routerLink]="['/']" class="back-link text-white text-decoration-none mb-3 d-inline-block">
+                    ← Inicio
+                </a>
+                <h1 class="artist-name text-white fw-black text-uppercase" *ngIf="artist">
+                    {{ artist.name }}
+                </h1>
+                <p class="text-white-50" *ngIf="artist">
+                    {{ artist.genres?.join(' / ') }}
+                </p>
+                <button *ngIf="artist"
+                        class="btn px-4 py-2 rounded-pill mt-3"
+                        [ngClass]="isFavoriteArtist ? 'bg-accent-red text-white' : 'btn-outline-light text-white'"
+                        [disabled]="isTogglingFavoriteArtist"
+                        (click)="toggleFavoriteArtist()">
+                    <i [class]="isFavoriteArtist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-2"></i>
+                    {{ isFavoriteArtist ? 'Te gusta' : 'Me gusta' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skeleton loader -->
+    <div class="container py-5" *ngIf="isLoading">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="skeleton-pulse rounded mb-3" style="height:24px;width:30%;"></div>
+                <div class="skeleton-pulse rounded mb-2" style="height:14px;width:100%;"></div>
+                <div class="skeleton-pulse rounded mb-2" style="height:14px;width:90%;"></div>
+                <div class="skeleton-pulse rounded" style="height:14px;width:80%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="container py-5" *ngIf="!isLoading && artist">
+        <div class="row g-5">
+
+            <!-- Columna principal -->
+            <div class="col-lg-8">
+
+                <!-- Biografía -->
+                <section class="mb-5">
+                    <h2 class="section-label text-accent-red mb-3">Biografía</h2>
+                    <p class="text-white-75 lh-lg">{{ artist.bio }}</p>
+                </section>
+
+                <!-- Discografía -->
+                <section>
+                    <h2 class="section-label text-accent-red mb-4">Discografía</h2>
+                    <div class="row row-cols-2 row-cols-sm-3 g-3">
+                        <div class="col" *ngFor="let album of artist.albums">
+                            <a [routerLink]="['/album', artist.name, album.name]" class="text-decoration-none">
+                                <div class="album-thumb mt-card overflow-hidden rounded mb-2" style="aspect-ratio:1;">
+                                    <img [src]="album.image || 'https://placehold.co/300/1a1c2e/60658a?text=No+Cover'"
+                                        class="w-100 h-100 object-fit-cover" [alt]="album.name">
+                                </div>
+                                <p class="mb-0 text-white fw-bold text-truncate" style="font-size:0.875rem;">
+                                    {{ album.name }}
+                                </p>
+                                <p class="mb-0 text-secondary text-truncate" style="font-size:0.78rem;">
+                                    {{ artist.name }}
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Columna lateral -->
+            <div class="col-lg-4">
+                <div class="mt-card p-4 rounded">
+                    <h5 class="section-label text-accent-red mb-4">Información</h5>
+                    <div class="d-flex align-items-center gap-2 mb-3 text-white">
+                        <i class="fa-solid fa-headphones text-accent-red"></i>
+                        <span>{{ formatListeners(artist.listeners) }} oyentes</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mb-3 text-white">
+                        <i class="fa-solid fa-music text-accent-red"></i>
+                        <span>{{ artist.genres?.join(' / ') }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

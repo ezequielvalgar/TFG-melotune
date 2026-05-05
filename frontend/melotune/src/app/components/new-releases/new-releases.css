@@ -1,0 +1,26 @@
+.nr-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--card-bg, #1e1e2f); /* Assuming mt-card provides base bg, but just in case */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nr-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.transition-transform {
+  transition: transform 0.3s ease;
+}
+
+.nr-card:hover .transition-transform {
+  transform: scale(1.05);
+}
+
+.bg-accent-red {
+  background-color: #E83E4C !important;
+  color: white;
+  padding: 0.4em 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}

@@ -1,0 +1,436 @@
+<div class="container py-5 mt-2">
+
+  <!-- Back link -->
+  <a routerLink="/" class="d-flex align-items-center text-secondary text-decoration-none mb-4" style="font-size: 0.9rem;">
+    <i class="fa-solid fa-arrow-left me-2"></i> Inicio
+  </a>
+
+  <!-- Cabecera del Perfil (Modo Lectura) -->
+  <div class="profile-header d-flex flex-column flex-md-row gap-4 align-items-start mb-4" *ngIf="!isEditingProfile">
+    
+    <!-- Avatar -->
+    <div class="position-relative flex-shrink-0">
+      <img [src]="user?.foto_perfil || avatarPreviewUrl"
+           class="profile-avatar" alt="Avatar"
+           (error)="onAvatarError($event)">
+      <button *ngIf="isOwnProfile" class="profile-edit-btn" title="Editar foto" (click)="toggleEditProfile()">
+        <i class="fa-solid fa-pen" style="font-size: 0.7rem;"></i>
+      </button>
+    </div>
+
+    <!-- Info -->
+    <div class="flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <h1 class="text-white fw-black mb-0" style="font-size: 2rem;">{{ user?.nombre || 'Nuevo Usuario' }}</h1>
+        <div class="d-flex gap-2">
+           <button *ngIf="isOwnProfile" class="btn btn-outline-light btn-sm rounded-pill px-3" (click)="toggleEditProfile()">Editar Perfil</button>
+           <app-follow-button *ngIf="!isOwnProfile" [userId]="profileUserId!" (followChanged)="onFollowChanged($event)"></app-follow-button>
+        </div>
+      </div>
+      <div class="text-secondary mb-3" style="font-size: 0.9rem;">&#64;{{ user?.username }}</div>
+      
+      <p class="text-secondary mb-3" style="font-size: 0.9rem; max-width: 520px; line-height: 1.6;">
+        {{ user?.bio || 'Sin biografía aún. ¡Cuéntanos algo sobre ti!' }}
+      </p>
+
+      <!-- Estadísticas rápidas -->
+      <div class="d-flex flex-wrap gap-4 align-items-center">
+        <div class="profile-stat-inline">
+          <i class="fa-regular fa-comment text-secondary me-1"></i>
+          <span class="text-white fw-bold">{{ stats.resenas }}</span>
+          <span class="text-secondary ms-1">reseñas</span>
+        </div>
+        <div class="profile-stat-inline follow-counter" (click)="openFollowModal('followers')">
+          <i class="fa-solid fa-people-group text-secondary me-1"></i>
+          <span class="text-white fw-bold">{{ stats.seguidores }}</span>
+          <span class="text-secondary ms-1">seguidores</span>
+        </div>
+        <div class="profile-stat-inline follow-counter" (click)="openFollowModal('following')">
+          <i class="fa-solid fa-user-check text-secondary me-1"></i>
+          <span class="text-white fw-bold">{{ stats.siguiendo }}</span>
+          <span class="text-secondary ms-1">siguiendo</span>
+        </div>
+        <div class="profile-stat-inline">
+          <i class="fa-regular fa-calendar text-secondary me-1"></i>
+          <span class="text-secondary">Desde {{ formattedRegistrationDate }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cabecera del Perfil (Modo Edición) -->
+  <div class="profile-header d-flex flex-column flex-md-row gap-4 align-items-start mb-4" *ngIf="isEditingProfile">
+    
+    <!-- Avatar Edición -->
+    <div class="position-relative flex-shrink-0" style="cursor: pointer;" (click)="triggerFileInput()" title="Click para cambiar foto">
+      <img [src]="avatarPreviewUrl || (currentUser$ | async)?.foto_perfil" 
+           class="profile-avatar border border-2 border-primary" alt="Avatar Edit" style="opacity: 0.8;"
+           (error)="onAvatarError($event)">
+      <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
+        <i class="fa-solid fa-camera fs-3 drop-shadow"></i>
+      </div>
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="d-none">
+    </div>
+
+    <!-- Info Edición -->
+    <div class="flex-grow-1 w-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-white fw-bold mb-0">Editar Perfil</h3>
+      </div>
+      
+      <div class="mb-3" style="max-width: 520px;">
+        <label class="form-label text-secondary" style="font-size: 0.85rem;">Nombre Visible</label>
+        <input type="text" class="form-control form-control-dark bg-dark text-white border-secondary border-opacity-25" 
+               [(ngModel)]="editNombre" maxlength="50" placeholder="Escribe tu nombre visible">
+      </div>
+
+      <div class="mb-4" style="max-width: 520px;">
+        <label class="form-label text-secondary" style="font-size: 0.85rem;">Biografía</label>
+        <textarea class="form-control form-control-dark bg-dark text-white border-secondary border-opacity-25" 
+                  [(ngModel)]="editBio" rows="3" maxlength="500" placeholder="Escribe algo sobre ti..."></textarea>
+        <div class="text-end text-secondary mt-1" style="font-size: 0.75rem;">{{ editBio.length }}/500</div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="d-flex gap-3">
+        <button class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="saveProfile()" [disabled]="isSavingProfile">
+          <span *ngIf="!isSavingProfile">Guardar Cambios</span>
+          <span *ngIf="isSavingProfile"><i class="fa-solid fa-spinner fa-spin me-2"></i> Guardando...</span>
+        </button>
+        <button class="btn btn-outline-secondary px-4 fw-bold rounded-pill" (click)="cancelEdit()" [disabled]="isSavingProfile">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs de Navegación -->
+  <div class="profile-tabs-bar mb-5">
+    <button class="profile-tab" [class.active]="activeTab === 'resenas'" (click)="setTab('resenas')">
+      <i class="fa-regular fa-comment me-2"></i> Reseñas
+    </button>
+    <button class="profile-tab" [class.active]="activeTab === 'favoritos'" (click)="setTab('favoritos')">
+      <i class="fa-regular fa-heart me-2"></i> Favoritos
+    </button>
+    <button class="profile-tab" [class.active]="activeTab === 'actividad'" (click)="setTab('actividad')">
+      <i class="fa-regular fa-clock me-2"></i> Actividad
+    </button>
+    <button class="profile-tab" [class.active]="activeTab === 'estadisticas'" (click)="setTab('estadisticas')">
+      <i class="fa-solid fa-chart-line me-2"></i> Estadísticas
+    </button>
+  </div>
+
+
+  <!-- ===== TAB: RESEÑAS ===== -->
+  <div *ngIf="activeTab === 'resenas'">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="text-white fw-bold mb-0">{{ userReviews.length }} Reseñas</h4>
+      <div class="btn-group-view">
+        <button class="btn-view" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+          <i class="fa-solid fa-list-ul"></i>
+        </button>
+        <button class="btn-view" [class.active]="viewMode === 'large'" (click)="viewMode = 'large'">
+          <i class="fa-solid fa-border-all"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-4">
+      <div class="review-card p-4 rounded-4" *ngFor="let review of userReviews" style="background-color: var(--card-bg); border: 1px solid var(--card-border);">
+        <div class="d-flex flex-column flex-md-row">
+          <!-- Portada -->
+          <a [routerLink]="['/album', review.artist, review.albumTitle]" class="rounded overflow-hidden me-md-4 mb-3 mb-md-0 flex-shrink-0 bg-dark text-decoration-none d-block"
+               [style.width.px]="viewMode === 'large' ? 180 : 110"
+               [style.height.px]="viewMode === 'large' ? 180 : 110">
+            <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" [alt]="review.albumTitle">
+          </a>
+
+          <div class="flex-grow-1">
+            <!-- Cabecera de la tarjeta -->
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <a [routerLink]="['/album', review.artist, review.albumTitle]" class="text-decoration-none d-block">
+                  <div class="fw-bold text-white mb-1" style="font-size: 1rem;">
+                    {{ review.albumTitle }} <span class="text-secondary fw-normal">— {{ review.artist }}</span>
+                  </div>
+                </a>
+                <div class="d-flex align-items-center mb-2" style="font-size: 0.82rem;">
+                  <a [routerLink]="['/profile', review.userId]" class="text-decoration-none">
+                    <img [src]="review.userAvatar" class="rounded-circle me-2" style="width: 18px; height: 18px;">
+                  </a>
+                  <a [routerLink]="['/profile', review.userId]" class="text-white fw-bold text-decoration-none">{{ review.username }}</a>
+                  <span class="text-secondary mx-2">•</span>
+                  <span class="text-secondary">{{ review.date }}</span>
+                </div>
+              </div>
+              <!-- Stars y Vibe -->
+              <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <i [style.color]="review.vibeColor" [class]="review.vibeIcon" class="fs-5"></i>
+                <div class="text-warning-custom">
+                  <!-- Estrellas llenas -->
+                  <i class="fa-solid fa-star fa-sm" *ngFor="let s of fullStars(review.rating)"></i>
+                  <!-- Media estrella -->
+                  <i class="fa-solid fa-star-half-stroke fa-sm" *ngIf="hasHalfStar(review.rating)"></i>
+                  <!-- Estrellas vacías -->
+                  <i class="fa-regular fa-star fa-sm text-secondary" *ngFor="let e of emptyStars(review.rating)"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <div class="tag-badge-sm" *ngFor="let tag of review.tags">{{ tag }}</div>
+            </div>
+
+            <!-- Titulo de la reseña -->
+            <h6 class="text-white fw-bold mb-2">{{ review.reviewTitle }}</h6>
+
+            <!-- Texto -->
+            <p class="text-secondary mb-3" style="font-size: 0.88rem; line-height: 1.6;">{{ review.content }}</p>
+
+            <!-- Canción Favorita -->
+            <div class="d-flex align-items-center mb-2" style="font-size: 0.85rem;">
+              <i class="fa-solid fa-music text-accent-red me-2"></i>
+              <span class="text-secondary">Favorita: <strong class="text-white">{{ review.favoriteSong }}</strong></span>
+            </div>
+
+            <!-- Escuchas -->
+            <div class="text-secondary mb-3" style="font-size: 0.82rem;">
+              <i class="fa-solid fa-headphones me-1"></i> {{ review.listenCount }} escuchas antes de escribir esta reseña
+            </div>
+
+            <!-- Interacciones -->
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <button class="btn btn-link p-0 text-decoration-none like-btn"
+                        [style.color]="review.likedByUser ? 'var(--accent-red)' : 'var(--text-secondary)'"
+                        (click)="onToggleLike(review)"
+                        style="font-size: 0.9rem;">
+                  <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-1 fs-6"></i>
+                  {{ review.likes }}
+                </button>
+                <span class="text-secondary" style="font-size: 0.9rem;">
+                  <i class="fa-regular fa-comment fs-6 me-1"></i> {{ review.comments }}
+                </span>
+                <span class="text-secondary" style="font-size: 0.9rem; cursor: pointer;">
+                  <i class="fa-regular fa-bookmark fs-6"></i>
+                </span>
+              </div>
+              <span class="text-secondary" style="font-size: 0.85rem; cursor: pointer;">
+                Ver menos <i class="fa-solid fa-chevron-up ms-1" style="font-size: 0.7rem;"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===== TAB: FAVORITOS ===== -->
+  <div id="favoritos" *ngIf="activeTab === 'favoritos'">
+    <!-- Albums Favoritos -->
+    <div class="mb-5">
+      <h5 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
+        <i class="fa-regular fa-heart text-accent-red"></i> Álbumes Favoritos
+      </h5>
+      <div class="albums-grid">
+        <div class="album-grid-item" *ngFor="let album of favoriteAlbums">
+          <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+            <div class="album-grid-cover rounded overflow-hidden">
+              <img [src]="album.image" [alt]="album.title" class="w-100 h-100 object-fit-cover">
+            </div>
+            <div class="mt-2">
+              <div class="text-white fw-semibold text-truncate" style="font-size: 0.85rem;">{{ album.title }}</div>
+              <div class="text-secondary text-truncate" style="font-size: 0.78rem;">{{ album.artist }}</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Albums Guardados (solo perfil propio) -->
+    <div *ngIf="isOwnProfile">
+      <h5 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
+        <i class="fa-regular fa-bookmark text-accent-red"></i> Álbumes Guardados
+      </h5>
+      <div class="albums-grid albums-grid-wide">
+        <div class="album-grid-item" *ngFor="let album of savedAlbums">
+          <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+            <div class="album-grid-cover rounded overflow-hidden">
+              <img [src]="album.image" [alt]="album.title" class="w-100 h-100 object-fit-cover">
+            </div>
+            <div class="mt-2">
+              <div class="text-white fw-semibold text-truncate" style="font-size: 0.85rem;">{{ album.title }}</div>
+              <div class="text-secondary text-truncate" style="font-size: 0.78rem;">{{ album.artist }}</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===== TAB: ACTIVIDAD ===== -->
+  <div *ngIf="activeTab === 'actividad'">
+    <!-- Escuchado Recientemente -->
+    <div class="mb-5">
+      <h5 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
+        <i class="fa-regular fa-clock text-accent-red"></i> Escuchado Recientemente
+      </h5>
+      <div class="albums-grid">
+        <div class="album-grid-item" *ngFor="let album of recentlyPlayed">
+          <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+            <div class="album-grid-cover rounded overflow-hidden">
+              <img [src]="album.image" [alt]="album.title" class="w-100 h-100 object-fit-cover">
+            </div>
+            <div class="mt-2">
+              <div class="text-white fw-semibold text-truncate" style="font-size: 0.85rem;">{{ album.title }}</div>
+              <div class="text-secondary text-truncate" style="font-size: 0.78rem;">{{ album.artist }}</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feed de Actividad Reciente -->
+    <div>
+      <h5 class="text-white fw-bold mb-4">Actividad Reciente</h5>
+      <div class="d-flex flex-column gap-3">
+        <a [routerLink]="['/album', item.artist, item.albumTitle]" class="activity-row d-flex align-items-center gap-3 p-3 rounded-3 text-decoration-none"
+             *ngFor="let item of activityFeed"
+             style="background-color: var(--card-bg); border: 1px solid var(--card-border);">
+          <img [src]="item.image" [alt]="item.albumTitle" class="rounded" style="width: 48px; height: 48px; object-fit: cover; flex-shrink:0;">
+          <div class="flex-grow-1">
+            <div class="text-accent-red" style="font-size: 0.75rem; font-weight: 700;">
+              <i class="fa-regular fa-clock me-1"></i> {{ item.type }}
+            </div>
+            <div class="text-white fw-bold">{{ item.albumTitle }}</div>
+            <div class="text-secondary" style="font-size: 0.82rem;">{{ item.artist }}</div>
+          </div>
+          <div class="d-flex flex-column align-items-end">
+            <div class="text-warning-custom mb-1">
+              <!-- Estrellas llenas -->
+              <i class="fa-solid fa-star fa-xs" *ngFor="let s of fullStars(item.rating)"></i>
+              <!-- Media estrella -->
+              <i class="fa-solid fa-star-half-stroke fa-xs" *ngIf="hasHalfStar(item.rating)"></i>
+              <!-- Estrellas vacías -->
+              <i class="fa-regular fa-star fa-xs text-secondary" *ngFor="let e of emptyStars(item.rating)"></i>
+            </div>
+            <span class="text-secondary" style="font-size: 0.78rem;">{{ item.date }}</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===== TAB: ESTADÍSTICAS ===== -->
+  <div *ngIf="activeTab === 'estadisticas'">
+    <!-- Tarjetas de Stats globales -->
+    <div class="stats-grid mb-5">
+      <div class="stat-card" *ngFor="let s of globalStats">
+        <i [class]="s.icon + ' text-accent-red fs-4 mb-3 stat-card-icon'"></i>
+        <div class="text-white fw-black stat-card-value">{{ s.value }}</div>
+        <div class="text-secondary stat-card-label">{{ s.label }}</div>
+      </div>
+    </div>
+
+    <!-- Distribución de Puntuaciones -->
+    <div class="section-card mb-5">
+      <h5 class="text-white fw-bold mb-4">Distribución de Puntuaciones</h5>
+      <div class="d-flex flex-column gap-3">
+        <div class="d-flex align-items-center gap-3" *ngFor="let row of ratingDistribution">
+          <div class="d-flex align-items-center" style="width: 60px; flex-shrink: 0;">
+            <i class="fa-solid fa-star text-warning-custom me-1" style="font-size: 0.8rem;"></i>
+            <span class="text-white fw-bold" style="font-size: 0.9rem;">{{ row.stars }}</span>
+          </div>
+          <div class="flex-grow-1" style="height: 12px; background-color: rgba(255,255,255,0.05); border-radius: 50px; overflow: hidden;">
+            <div class="h-100 rounded-pill"
+                 [style.width.%]="row.percent"
+                 [style.background-color]="row.percent > 0 ? 'var(--accent-red)' : 'transparent'"
+                 style="transition: width 0.8s ease;">
+            </div>
+          </div>
+          <span class="text-secondary" style="width: 24px; text-align: right; font-size: 0.85rem;">{{ row.count }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Géneros Más Escuchados -->
+    <div class="section-card">
+      <h5 class="text-white fw-bold mb-4">Géneros Más Escuchados</h5>
+      <div class="d-flex flex-wrap gap-3">
+        <div class="genre-pill" *ngFor="let genre of topGenres; let i = index"
+             [class.genre-pill-active]="i === 0">
+          {{ genre }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <!-- Modal seguidores/seguidos -->
+  <div class="modal-backdrop-custom" *ngIf="showFollowModal" (click)="closeFollowModal()">
+    <div class="modal-custom mt-card p-4" (click)="$event.stopPropagation()">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">
+                {{ followModalType === 'followers' ? 'Seguidores' : 'Siguiendo' }}
+            </h5>
+            <button class="btn-close btn-close-white" (click)="closeFollowModal()"></button>
+        </div>
+
+        <!-- Skeleton loader -->
+        <div *ngIf="isLoadingModal">
+            <div *ngFor="let s of [1,2,3,4,5]"
+                 class="d-flex align-items-center gap-3 mb-3">
+                <div class="skeleton-pulse rounded-circle" style="width:42px;height:42px;flex-shrink:0;"></div>
+                <div class="flex-grow-1">
+                    <div class="skeleton-pulse rounded mb-1" style="height:13px;width:60%;"></div>
+                    <div class="skeleton-pulse rounded" style="height:11px;width:40%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de usuarios -->
+        <div *ngIf="!isLoadingModal">
+            <div *ngIf="followModalUsers.length === 0" class="text-secondary text-center py-3">
+                {{ followModalType === 'followers' ? 'No tiene seguidores todavía.' : 'No sigue a nadie todavía.' }}
+            </div>
+            <div *ngFor="let user of followModalUsers"
+                 class="d-flex align-items-center gap-3 mb-3">
+                <a [routerLink]="['/profile', user.id]"
+                   (click)="closeFollowModal()"
+                   class="text-decoration-none d-flex align-items-center gap-3 flex-grow-1">
+                    <img [src]="user.foto_perfil || 'https://ui-avatars.com/api/?name=' + user.username + '&background=1a1c2e&color=E83E8C&size=200&bold=true'"
+                         class="rounded-circle"
+                         style="width:42px;height:42px;object-fit:cover;flex-shrink:0;"
+                         [alt]="user.username">
+                    <div class="overflow-hidden">
+                        <p class="mb-0 fw-bold text-white text-truncate" style="font-size:0.875rem;">
+                            {{ user.nombre }}
+                        </p>
+                        <p class="mb-0 text-secondary text-truncate" style="font-size:0.75rem;">
+                            @{{ user.username }}
+                        </p>
+                    </div>
+                </a>
+                <app-follow-button 
+                    *ngIf="authService.currentUserValue?.id !== user.id"
+                    [userId]="user.id"
+                    [followingLabel]="isOwnProfile ? 'Dejar de seguir' : 'Siguiendo'">
+                </app-follow-button>
+                <a *ngIf="authService.currentUserValue?.id === user.id"
+                   [routerLink]="['/profile']"
+                   class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                   style="font-size: 0.8rem;">
+                    Tu perfil
+                </a>
+            </div>
+        </div>
+
+    </div>
+  </div>
+

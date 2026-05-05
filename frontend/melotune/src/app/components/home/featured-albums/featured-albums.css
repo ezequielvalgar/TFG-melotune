@@ -1,0 +1,62 @@
+/* ===== Marquee Infinito — 8 álbumes reales + 8 clones = 16 ítems ===== */
+
+/*
+  MATEMÁTICA CORRECTA:
+  - Queremos ver 4 ítems a la vez en el outer (100% del outer)
+  - Cada ítem visible = 25% del outer
+  - Tenemos 16 ítems en total (8 originales + 8 clones)
+  - El track debe tener: 16 × 25% del outer = 400% del outer
+  - La animación mueve -50% del track = -200% del outer = 8 ítems (los originales)
+  - Al resetear, el contenido visible es IDÉNTICO → sin salto
+*/
+
+.marquee-outer {
+  overflow: hidden;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+}
+
+.marquee-track {
+  display: flex;
+  width: 400%;
+  will-change: transform;
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.marquee-track.paused {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* 16 ítems en track de 400% del outer → cada ítem = 25% del outer = 6.25% del track */
+.carousel-item-custom {
+  flex: 0 0 6.25%;
+  min-width: 6.25%;
+  padding-right: 1.5rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .carousel-item-custom {
+    flex: 0 0 12.5%;
+    min-width: 12.5%;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-item-custom {
+    flex: 0 0 25%;
+    min-width: 25%;
+    padding-right: 1rem;
+  }
+}

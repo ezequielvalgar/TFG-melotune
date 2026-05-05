@@ -1,13 +1,425 @@
 /* Global Styles para MeloTune */
 :root {
-  --bg-color: #1a1b26; /* Fondo azul muy oscuro casi negro */
-  --card-bg: #222436;  /* Fondo de las tarjetas, ligeramente más claro */
-  --card-border: #2e3046; /* Borde sutil de las tarjetas */
+  --bg-color: #1a1b26;
+  --card-bg: #222436;
+  --card-border: #2e3046;
   --text-primary: #ffffff;
   --text-secondary: #a0a6cc;
   --accent-red: #ff3344;
   --accent-yellow: #ffb800;
   --header-bg: #16161e;
+}
+
+/* ===== TEMA CLARO ===== */
+:root[data-theme="light"] {
+  --bg-color: #f0f2f8;
+  --card-bg: #ffffff;
+  --card-border: #d8dced;
+  --text-primary: #12131f;
+  --text-secondary: #525878;
+  --accent-red: #e8192c;
+  --accent-yellow: #d4900a;
+  --header-bg: #ffffff;
+}
+
+/* ---- BASE ---- */
+[data-theme="light"] body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+}
+
+/* ---- TEXTO: reemplaza text-white por oscuro ---- */
+[data-theme="light"] .text-white,
+[data-theme="light"] h1.text-white,
+[data-theme="light"] h2.text-white,
+[data-theme="light"] h3.text-white,
+[data-theme="light"] h4.text-white,
+[data-theme="light"] h5.text-white,
+[data-theme="light"] h6.text-white,
+[data-theme="light"] span.text-white,
+[data-theme="light"] p.text-white,
+[data-theme="light"] div.text-white,
+[data-theme="light"] a.text-white {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .text-white-50,
+[data-theme="light"] .text-white-75 {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="light"] .text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .fw-black,
+[data-theme="light"] .fw-bold {
+  color: inherit;
+}
+
+/* ---- FONDOS ---- */
+[data-theme="light"] .bg-dark {
+  background-color: #e8eaf4 !important;
+}
+
+[data-theme="light"] .bg-dark.bg-opacity-50,
+[data-theme="light"] .bg-dark.bg-opacity-25 {
+  background-color: rgba(200, 204, 225, 0.45) !important;
+}
+
+[data-theme="light"] .bg-opacity-50 {
+  opacity: 1 !important;
+}
+
+/* ---- TARJETAS / CONTENEDORES ---- */
+[data-theme="light"] .mt-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+[data-theme="light"] .review-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .rounded-4[style*="background-color"] {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* ---- HEADER / NAVBAR ---- */
+[data-theme="light"] nav.navbar {
+  background-color: var(--header-bg) !important;
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .navbar .nav-link {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .navbar .nav-link.bg-white {
+  background-color: var(--bg-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Marca / Logo texto */
+[data-theme="light"] .navbar-brand span {
+  color: var(--text-primary) !important;
+}
+
+/* Icono búsqueda header */
+[data-theme="light"] .header-icon-hover {
+  color: var(--text-secondary) !important;
+}
+
+/* ---- DROPDOWN DEL HEADER ---- */
+[data-theme="light"] .dropdown-menu-custom {
+  background-color: #ffffff !important;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+[data-theme="light"] .dropdown-header-area {
+  background-color: #f8f9fe !important;
+}
+
+[data-theme="light"] .dropdown-item-custom {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .dropdown-item-custom:hover {
+  background-color: var(--bg-color) !important;
+}
+
+[data-theme="light"] .dropdown-divider-custom {
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .profile-trigger .profile-img {
+  border: 2px solid var(--card-border);
+}
+
+/* ---- BOTONES ---- */
+[data-theme="light"] .btn-outline-light {
+  border-color: var(--card-border) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .btn-outline-light:hover {
+  background-color: var(--bg-color) !important;
+}
+
+[data-theme="light"] .btn-outline-secondary {
+  border-color: var(--card-border) !important;
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .btn-close-white {
+  filter: invert(1);
+}
+
+/* Header-btn (filtros, Recientes, etc.) */
+[data-theme="light"] .header-btn {
+  color: var(--text-secondary) !important;
+  border-color: var(--card-border) !important;
+  background-color: var(--card-bg) !important;
+}
+
+[data-theme="light"] .header-btn.active {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-color) !important;
+}
+
+/* ---- INPUTS / SELECTS ---- */
+[data-theme="light"] .form-control,
+[data-theme="light"] .form-select,
+[data-theme="light"] .form-control-dark {
+  background-color: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .form-control::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] select option {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+/* ---- BORDERS ---- */
+[data-theme="light"] .border-secondary,
+[data-theme="light"] .border-bottom.border-secondary {
+  border-color: var(--card-border) !important;
+}
+
+/* ---- SKELETON LOADER ---- */
+[data-theme="light"] .skeleton-pulse {
+  background: linear-gradient(90deg, #e2e5f0 25%, #f0f2f8 50%, #e2e5f0 75%) !important;
+  background-size: 200% 100% !important;
+}
+
+/* ---- BUSCADOR HERO ---- */
+[data-theme="light"] .search-hero-input {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .search-hero-input::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+/* Resultados del buscador */
+[data-theme="light"] .hero-search-results,
+[data-theme="light"] .search-results-dropdown {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* ---- SECCIÓN HERO DE ARTISTA ---- */
+[data-theme="light"] .artist-hero-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(240,242,248,0.97) 0%,
+    rgba(240,242,248,0.65) 55%,
+    transparent 100%
+  ) !important;
+}
+
+/* ---- RESEÑAS / ETIQUETAS ---- */
+[data-theme="light"] .tag-badge-small,
+[data-theme="light"] .tag-badge-sm,
+[data-theme="light"] .filter-pill {
+  background-color: var(--bg-color) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .filter-pill.active {
+  background-color: var(--accent-red) !important;
+  color: #fff !important;
+}
+
+/* ---- TABS DEL PERFIL ---- */
+[data-theme="light"] .profile-tabs-bar {
+  border-bottom-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .profile-tab {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .profile-tab.active {
+  color: var(--accent-red) !important;
+  border-bottom-color: var(--accent-red) !important;
+}
+
+/* ---- STATS / SECTION CARDS (estadísticas) ---- */
+[data-theme="light"] .stat-card,
+[data-theme="light"] .section-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* ---- PANEL DE FILTROS ---- */
+[data-theme="light"] .filter-panel {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* ---- MODAL SEGUIDORES ---- */
+[data-theme="light"] .modal-custom {
+  background-color: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .modal-backdrop-custom {
+  background-color: rgba(0,0,0,0.4) !important;
+}
+
+/* ---- TOAST AJUSTES ---- */
+[data-theme="light"] .settings-toast {
+  background-color: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* ---- SECCIÓN LATERAL (sidebar-promo) ---- */
+[data-theme="light"] .section-title {
+  color: var(--text-primary) !important;
+}
+
+/* ---- SEPARADORES ---- */
+[data-theme="light"] hr {
+  border-color: var(--card-border) !important;
+  opacity: 1;
+}
+
+/* ---- LINKS / HOVER ---- */
+[data-theme="light"] .link-see-all {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] a:hover {
+  color: var(--accent-red) !important;
+}
+
+/* ---- LIKE BTN / INTERACCIONES ---- */
+[data-theme="light"] .like-btn {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .like-btn.text-danger,
+[data-theme="light"] .text-danger {
+  color: var(--accent-red) !important;
+}
+
+/* ---- BACK-LINK ---- */
+[data-theme="light"] .back-link {
+  color: var(--text-secondary) !important;
+}
+
+/* ---- NAV TABS (Amigos) ---- */
+[data-theme="light"] .nav-tabs {
+  border-color: var(--card-border) !important;
+}
+
+[data-theme="light"] .nav-link.bg-transparent,
+[data-theme="light"] .nav-link.bg-transparent.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* ---- POPUP / OVERLAY DE BÚSQUEDA ---- */
+[data-theme="light"] .search-overlay,
+[data-theme="light"] .hero-search-overlay {
+  background-color: rgba(240,242,248,0.98) !important;
+}
+
+/* ====================================================
+   OVERRIDES DE ALTA ESPECIFICIDAD
+   Para sobreescribir colores hardcodeados en CSS
+   de componentes individuales (header.css, settings.css…)
+   ==================================================== */
+
+/* -- Iconos del dropdown (estaban rgba(255,255,255,0.5)) -- */
+:root[data-theme="light"] .dropdown-item-custom .item-icon {
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme="light"] .dropdown-item-custom {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="light"] .dropdown-item-custom:hover {
+  background-color: var(--bg-color) !important;
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="light"] .dropdown-item-custom:hover .item-icon {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="light"] .dropdown-menu-custom {
+  background-color: #ffffff !important;
+  border-color: var(--card-border) !important;
+}
+
+:root[data-theme="light"] .dropdown-divider-custom {
+  border-color: var(--card-border) !important;
+}
+
+:root[data-theme="light"] .dropdown-header-area {
+  background-color: #f5f6fc !important;
+}
+
+/* -- Botón login neon (estaba color: #fff) -- */
+:root[data-theme="light"] .login-btn-neon {
+  color: var(--text-primary) !important;
+  border-color: var(--accent-red);
+}
+
+/* -- Icono hover header (estaba color: #fff) -- */
+:root[data-theme="light"] .header-icon-hover,
+:root[data-theme="light"] .header-icon-hover:hover {
+  color: var(--text-secondary) !important;
+}
+
+/* -- Borde profile trigger (estaba border: #fff) -- */
+:root[data-theme="light"] .profile-trigger.active,
+:root[data-theme="light"] .profile-trigger:hover {
+  border-color: var(--card-border) !important;
+}
+
+/* -- Toast de ajustes (fondo oscuro hardcodeado) -- */
+:root[data-theme="light"] .settings-toast {
+  background-color: #ffffff !important;
+  color: var(--text-primary) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+}
+
+/* -- Form select border (estaba rgba(255,255,255,0.12)) -- */
+:root[data-theme="light"] .form-select {
+  border-color: var(--card-border) !important;
+}
+
+/* -- Iconos FontAwesome genéricos que heredan de .text-white -- */
+:root[data-theme="light"] i.fa-solid,
+:root[data-theme="light"] i.fa-regular,
+:root[data-theme="light"] i.fa-brands {
+  color: inherit;
+}
+
+/* -- Los iconos accent-red se mantienen rojos -- */
+:root[data-theme="light"] .text-accent-red i,
+:root[data-theme="light"] i.text-accent-red {
+  color: var(--accent-red) !important;
 }
 
 body {
@@ -74,6 +486,16 @@ a:hover {
   padding: 12px 24px !important;
 }
 
+/* Skeleton loading animation */
+.skeleton-pulse {
+  background: linear-gradient(90deg, var(--card-bg) 25%, rgba(255,255,255,0.06) 50%, var(--card-bg) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 .search-hero-input::placeholder {
   color: var(--text-secondary) !important;
 }
@@ -123,3 +545,39 @@ a:hover {
   color: var(--text-secondary);
   font-size: 0.95rem;
 }
+
+/* --- OVERRIDES PARA ALBUM PAGE (Garantizar Tematización Oscura) --- */
+.album-card-override {
+  background: var(--card-bg) !important;
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: white !important;
+  border-radius: 16px !important;
+}
+
+.album-card-override h6 {
+  color: var(--accent-red) !important;
+}
+
+.album-card-override span, 
+.album-card-override small {
+  color: var(--text-secondary) !important;
+}
+
+.btn-brand-red {
+  background: linear-gradient(135deg, #ff3344, #ff5c6a) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 800 !important;
+  padding: 10px 25px !important;
+  border-radius: 30px !important;
+  box-shadow: 0 4px 15px rgba(255, 51, 68, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-brand-red:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.1) !important;
+  box-shadow: 0 6px 20px rgba(255, 51, 68, 0.5) !important;
+}
+

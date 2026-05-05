@@ -13,14 +13,17 @@ class ReviewAlbum extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'usuario_id',
-        'album_id',
-        'calificacion',
-        'titulo',
-        'contenido',
-        'fecha_creacion',
-        'fecha_modificacion',
-        'likes',
+        'usuario_id', 'album_id', 'calificacion', 'titulo', 'contenido',
+        'etiquetas', 'encuesta', 'preguntas_guia', 'contexto_escucha',
+        'cancion_favorita', 'vibe_factor', 'likes'
+    ];
+
+    protected $casts = [
+        'etiquetas'     => 'array',
+        'encuesta'      => 'array',
+        'preguntas_guia'=> 'array',
+        'calificacion'  => 'float',
+        'likes'         => 'integer',
     ];
 
     public function usuario()
@@ -31,5 +34,10 @@ class ReviewAlbum extends Model
     public function album()
     {
         return $this->belongsTo(Album::class, 'album_id');
+    }
+
+    public function likesPorUsuario()
+    {
+        return $this->hasMany(LikeReview::class, 'review_id');
     }
 }

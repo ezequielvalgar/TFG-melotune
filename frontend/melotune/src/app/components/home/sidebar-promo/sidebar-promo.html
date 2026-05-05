@@ -3,24 +3,46 @@
   <div class="bg-accent-red rounded-4 p-5 text-center d-flex flex-column justify-content-center align-items-center mb-2" style="aspect-ratio: 1; box-shadow: 0 10px 30px rgba(255, 51, 68, 0.2);">
     <h2 class="text-white fw-black mb-3" style="font-size: 3rem; font-weight: 900; line-height: 1;">OUT<br>NOW</h2>
     <p class="text-white mb-4" style="font-size: 0.9rem;">Descubre los últimos lanzamientos</p>
-    <button class="btn btn-outline-light px-4 py-2" style="border-radius: 6px; font-weight: 600; letter-spacing: 1px;">EXPLORAR</button>
+    <button class="btn btn-outline-light px-4 py-2" [routerLink]="['/new-releases']" style="border-radius: 6px; font-weight: 600; letter-spacing: 1px; cursor: pointer;">EXPLORAR</button>
   </div>
 
   <!-- Top Álbumes -->
   <div>
     <h4 class="section-title text-white mb-4">TOP ÁLBUMES</h4>
     <div class="d-flex flex-column gap-3">
-      <div class="d-flex align-items-center" *ngFor="let album of topAlbums; let i = index">
-        <span class="fs-6 fw-bold text-secondary me-3" style="min-width: 15px;">{{ i + 1 }}</span>
-        <div class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 45px; height: 45px;">
-          <img [src]="album.image" class="w-100 h-100 object-fit-cover" alt="Album Cover">
+      <!-- Skeleton loader -->
+      <div *ngIf="isLoading" class="d-flex flex-column gap-3">
+        <div class="d-flex align-items-center" *ngFor="let s of [1,2,3,4,5]">
+           <div class="skeleton-pulse rounded overflow-hidden me-3 flex-shrink-0" style="width: 45px; height: 45px;"></div>
+           <div class="flex-grow-1">
+             <div class="skeleton-pulse rounded mb-1" style="height: 12px; width: 80%;"></div>
+             <div class="skeleton-pulse rounded" style="height: 10px; width: 50%;"></div>
+           </div>
         </div>
-        <div class="flex-grow-1">
-          <h6 class="fw-bold mb-0 text-white" style="font-size: 0.9rem;">{{ album.title }}</h6>
-          <span class="text-secondary" style="font-size: 0.8rem;">{{ album.artist }}</span>
-        </div>
-        <span class="fw-bold text-white fs-6">{{ album.score }}</span>
       </div>
+
+      <ng-container *ngIf="!isLoading">
+        <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none d-block mb-3 list-group-item-action" *ngFor="let album of topAlbums; let i = index">
+          <div class="d-flex align-items-center">
+            <span class="fs-6 fw-bold text-secondary me-3" style="min-width: 15px;">{{ i + 1 }}</span>
+            <div class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 45px; height: 45px;">
+              <img [src]="album.image || 'https://placehold.co/100/222436/60658a?text=Img'" class="w-100 h-100 object-fit-cover" [alt]="album.title">
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="fw-bold mb-0 text-white" style="font-size: 0.9rem;">{{ album.title }}</h6>
+              <span class="text-secondary" style="font-size: 0.8rem;">{{ album.artist }}</span>
+            </div>
+            <div class="d-flex flex-column align-items-end flex-shrink-0">
+              <span class="fw-bold text-white mb-1" style="font-size: 0.85rem;">{{ album.score }}</span>
+              <div class="text-warning-custom d-flex align-items-center" style="font-size: 0.65rem;">
+                <i class="fa-solid fa-star" *ngFor="let s of fullStars(album.score)"></i>
+                <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(album.score)"></i>
+                <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(album.score)"></i>
+              </div>
+            </div>
+          </div>
+        </a>
+      </ng-container>
     </div>
   </div>
 </div>

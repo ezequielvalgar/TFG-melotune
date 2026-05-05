@@ -1,0 +1,120 @@
+.album-page-container {
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.back-link {
+    transition: all 0.3s ease;
+    opacity: 0.7;
+}
+
+.back-link:hover {
+    color: var(--accent-red) !important;
+    opacity: 1;
+    transform: translateX(-5px);
+}
+
+/* Botón de Acción Principal - WOW focus */
+.btn-accent-red {
+    background: linear-gradient(135deg, var(--accent-red), #ff5c6a) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 30px !important;
+    border-radius: 50px !important;
+    box-shadow: 0 10px 20px rgba(255, 51, 68, 0.3) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-accent-red:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 15px 25px rgba(255, 51, 68, 0.4) !important;
+    filter: brightness(1.1);
+}
+
+.btn-accent-red:active {
+    transform: translateY(0);
+}
+
+/* Glassmorphism para las tarjetas */
+.mt-card {
+    background: rgba(34, 36, 54, 0.6) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease;
+}
+
+.mt-card:hover {
+    background: rgba(34, 36, 54, 0.8) !important;
+    border-color: rgba(255, 51, 68, 0.2) !important;
+}
+
+.section-heading {
+    letter-spacing: 2px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--accent-red) !important;
+    margin-bottom: 20px !important;
+    display: block;
+}
+
+.track-item {
+    transition: all 0.2s ease;
+    border-radius: 12px;
+    margin-bottom: 4px;
+}
+
+.track-item:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    transform: translateX(10px);
+}
+
+.album-cover-pulse {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.album-cover-pulse img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.album-cover-pulse:hover img {
+    transform: scale(1.1);
+}
+
+.review-card {
+    background: linear-gradient(145deg, rgba(34, 36, 54, 0.9), rgba(26, 27, 38, 0.9)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+.badge-tag {
+    background: rgba(255, 51, 68, 0.1);
+    color: var(--accent-red);
+    border: 1px solid rgba(255, 51, 68, 0.2);
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+}
+
+.custom-yellow-bar {
+    background: linear-gradient(90deg, var(--accent-yellow), #ffd700) !important;
+    border-radius: 10px;
+}
+
+.tracklist {
+    background: rgba(0,0,0,0.1);
+    padding: 15px;
+    border-radius: 20px;
+}

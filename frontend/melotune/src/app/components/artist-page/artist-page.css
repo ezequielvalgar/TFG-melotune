@@ -1,0 +1,56 @@
+.artist-hero {
+    height: 400px;
+    /* Mantiene la proporción de la imagen cubriendo todo el espacio */
+    background-size: cover;
+    /* Centra la imagen tanto vertical como horizontalmente */
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.artist-hero-overlay {
+    position: absolute;
+    inset: 0;
+    /* Un degradado suave que permite ver mejor el centro de la foto */
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.2) 0%,
+            rgba(15, 17, 32, 0.95) 100%);
+    display: flex;
+    /* Alinea el texto en la parte inferior */
+    align-items: flex-end;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+    /* Añadido para que el texto no toque el borde */
+}
+
+.artist-name {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -1px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+
+.section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.album-thumb {
+    transition: transform 0.2s ease;
+}
+
+.album-thumb:hover {
+    transform: scale(1.03);
+}
+
+.back-link {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+}
+
+.back-link:hover {
+    opacity: 1;
+}

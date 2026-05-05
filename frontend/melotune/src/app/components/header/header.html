@@ -1,24 +1,88 @@
-<nav class="navbar navbar-expand-lg" style="background-color: var(--header-bg); padding: 1rem 0;">
+<nav class="navbar navbar-expand-lg position-relative z-3" style="background-color: var(--header-bg); padding: 1rem 0;">
   <div class="container d-flex align-items-center justify-content-between">
     <!-- Logotipo / Marca -->
-    <a class="navbar-brand d-flex align-items-center" href="/">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
       <img src="logo.png" alt="MeloTune Logo"
         style="width: 60px; height: 60px; border-radius: 10px; margin-right: 12px; object-fit: cover;">
       <span class="fs-4 fw-bold text-white tracking-widest" style="letter-spacing: 2px;">MELOTUNE</span>
     </a>
 
     <!-- Enlaces de navegación (Centro) -->
-    <div class="d-none d-lg-flex gx-4">
-      <a class="nav-link px-3 py-1 bg-white bg-opacity-10 rounded text-white fw-semibold" href="#">INICIO</a>
-      <a class="nav-link px-3 py-1 text-secondary fw-semibold" href="#">RESEÑAS</a>
-      <a class="nav-link px-3 py-1 text-secondary fw-semibold" href="#">MÚSICA</a>
-      <a class="nav-link px-3 py-1 text-secondary fw-semibold" href="#">TOPS</a>
+    <div class="d-none d-lg-flex gx-4 align-items-center gap-3">
+      <a class="nav-link px-3 py-1 rounded fw-semibold text-secondary transition-colors"
+         routerLink="/" 
+         [routerLinkActiveOptions]="{exact: true}"
+         routerLinkActive="bg-white bg-opacity-10 text-white">INICIO</a>
+         
+      <a class="nav-link px-3 py-1 rounded fw-semibold text-secondary transition-colors"
+         routerLink="/reviews" 
+         routerLinkActive="bg-white bg-opacity-10 text-white">RESEÑAS</a>
+         
+      <a class="nav-link px-3 py-1 rounded fw-semibold text-secondary transition-colors"
+         routerLink="/new-releases"
+         routerLinkActive="bg-white bg-opacity-10 text-white">OUT NOW</a>
+      <a class="nav-link px-3 py-1 rounded fw-semibold text-secondary transition-colors"
+         routerLink="/friends"
+         routerLinkActive="bg-white bg-opacity-10 text-white">AMIGOS</a>
     </div>
 
-    <!-- Iconos de la derecha (Buscar, Añadir) -->
-    <div class="d-flex align-items-center">
-      <a href="#" class="text-secondary me-4 fs-5"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="#" class="text-secondary fs-5"><i class="fa-solid fa-plus"></i></a>
+    <!-- Iconos y Acciones Derecha -->
+    <div class="d-flex align-items-center position-relative">
+      <a href="#" (click)="openSearch($event)" class="text-secondary me-4 fs-5 transition-colors header-icon-hover"><i class="fa-solid fa-magnifying-glass"></i></a>
+      
+      <!-- Bloque: Usuario NO logueado -->
+      <ng-container *ngIf="(currentUser$ | async) === null">
+        <a routerLink="/login" class="btn btn-sm fw-bold login-btn-neon shadow-sm px-3 py-2 ms-2">
+          Iniciar sesión / Registrarse
+        </a>
+      </ng-container>
+
+      <!-- Bloque: Usuario Logueado (Dropdown) -->
+      <ng-container *ngIf="currentUser$ | async as user">
+        <!-- Contenedor del trigger -->
+        <div class="position-relative ms-2">
+          
+          <button class="btn p-0 profile-trigger border-0 bg-transparent" 
+                  [class.active]="isDropdownOpen" 
+                  (click)="toggleDropdown()">
+            <img [src]="user.foto_perfil" alt="Perfil" class="profile-img">
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div class="dropdown-menu-custom shadow-lg" *ngIf="isDropdownOpen">
+            <!-- Info usuario cabecera -->
+            <div class="px-4 py-3 dropdown-header-area">
+              <h6 class="text-white fw-bold mb-0" style="font-size: 1rem;">{{ user.nombre }}</h6>
+              <div class="text-secondary mt-1" style="font-size: 0.8rem;">&#64;{{ user.username }}</div>
+            </div>
+            
+            <hr class="dropdown-divider-custom m-0">
+            
+            <!-- Items principales -->
+            <div class="py-2">
+              <a class="dropdown-item-custom" routerLink="/profile" (click)="isDropdownOpen = false"><i class="fa-regular fa-user item-icon"></i> Mi perfil</a>
+              <button class="dropdown-item-custom" style="background:none;border:none;width:100%;text-align:left;" (click)="openSearch()"><i class="fa-regular fa-pen-to-square item-icon"></i> Nueva reseña</button>
+              <a class="dropdown-item-custom" [routerLink]="['/profile']" fragment="favoritos" (click)="isDropdownOpen = false"><i class="fa-regular fa-heart item-icon"></i> Mis favoritos</a>
+              <a class="dropdown-item-custom"><i class="fa-solid fa-book-bookmark item-icon"></i> Guardados</a>
+            </div>
+            
+            <hr class="dropdown-divider-custom m-0">
+            
+            <!-- Preferencias y Salir -->
+            <div class="py-2">
+              <a class="dropdown-item-custom" routerLink="/ajustes" (click)="isDropdownOpen = false"><i class="fa-solid fa-gear item-icon"></i> Ajustes</a>
+              <a class="dropdown-item-custom item-logout text-danger mt-1" (click)="logout()">
+                <i class="fa-solid fa-arrow-right-from-bracket item-icon text-danger"></i> Cerrar sesion
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </ng-container>
+
     </div>
   </div>
+
+  <!-- Capa invisible para cerrar dropdown si pinchas fuera (simplificado) -->
+  <div class="dropdown-backdrop" *ngIf="isDropdownOpen" (click)="isDropdownOpen = false"></div>
 </nav>

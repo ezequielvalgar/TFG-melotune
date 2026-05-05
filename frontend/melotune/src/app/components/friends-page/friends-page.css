@@ -1,0 +1,8 @@
+.nav-link {
+    transition: all 0.2s ease;
+    border: none !important;
+}
+
+.nav-link:hover {
+    opacity: 0.85;
+}

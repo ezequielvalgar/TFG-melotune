@@ -1,0 +1,149 @@
+.transition-transform {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+}
+
+.like-btn:hover .fa-heart {
+  transform: scale(1.15);
+}
+
+.like-btn:active .fa-heart {
+  transform: scale(0.9);
+}
+
+.like-pop {
+  animation: likePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes likePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+/* Modos de visualización de Card */
+.review-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+}
+
+/* Lista: Portada pequeña cuadrada a la izquierda */
+.list-mode .card-image-box {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Large: Portada grande casi banner a la izquierda */
+.large-mode .card-image-box {
+  width: 250px;
+  height: 250px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.large-mode .review-card {
+  padding: 1.5rem !important; /* Ligeramente más holgado */
+}
+
+/* Botonera cabecera */
+.header-btn {
+  background-color: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-btn:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.header-btn.active {
+  background-color: var(--accent-red);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(245, 41, 61, 0.2);
+}
+
+/* Toggle Grupo View Mode */
+.btn-group-view {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  display: flex;
+  overflow: hidden;
+}
+
+.btn-view {
+  background-color: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 0.8rem;
+  transition: all 0.2s;
+}
+
+.btn-view:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.btn-view.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+
+/* Filtros Panel */
+.filter-panel {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+}
+
+.filter-pill {
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.filter-pill:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.filter-pill.active {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(245, 41, 61, 0.3);
+}
+
+/* Etiqueta individual en Review Card */
+.tag-badge-small {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

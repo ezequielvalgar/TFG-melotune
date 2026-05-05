@@ -1,39 +1,79 @@
 <div class="mb-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="section-title mb-0"><i class="fa-regular fa-star text-accent-red"></i> ÚLTIMAS RESEÑAS</h2>
-    <a href="#" class="link-see-all text-decoration-none">VER TODAS <i class="fa-solid fa-arrow-right"></i></a>
+    <a [routerLink]="['/reviews']" class="link-see-all text-decoration-none">VER TODAS <i class="fa-solid fa-arrow-right"></i></a>
   </div>
 
-  <div class="d-flex flex-column gap-3">
-    <div class="mt-card p-4" *ngFor="let review of latestReviews">
-      <div class="d-flex">
-        <!-- Portada del Álbum -->
-        <div class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 50px; height: 50px;">
-          <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" alt="Album Cover">
+  <div class="d-flex flex-column gap-4">
+    
+    <!-- Skeleton Loader -->
+    <ng-container *ngIf="isLoading">
+      <div class="mt-card p-4" *ngFor="let s of [1,2,3,4,5]">
+        <div class="d-flex mb-3">
+          <div class="skeleton-pulse rounded me-3" style="width: 80px; height: 80px;"></div>
+          <div class="flex-grow-1">
+            <div class="skeleton-pulse rounded mb-2" style="height: 16px; width: 40%;"></div>
+            <div class="skeleton-pulse rounded" style="height: 12px; width: 25%;"></div>
+          </div>
         </div>
+        <div>
+           <div class="skeleton-pulse rounded mb-2" style="height: 12px; width: 100%;"></div>
+           <div class="skeleton-pulse rounded mb-2" style="height: 12px; width: 100%;"></div>
+           <div class="skeleton-pulse rounded" style="height: 12px; width: 60%;"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Content -->
+    <ng-container *ngIf="!isLoading">
+      <div class="mt-card p-4" *ngFor="let review of latestReviews">
+        <div class="d-flex mb-3">
+          
+          <!-- Album thumbnail -->
+          <a [routerLink]="['/album', review.artist, review.albumTitle]" class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 80px; height: 80px; text-decoration: none;">
+            <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" [alt]="review.albumTitle">
+          </a>
         
-        <div class="flex-grow-1">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <div>
-              <h6 class="fw-bold mb-0 text-white">{{ review.albumTitle }} <span class="text-secondary fw-normal"> — {{ review.artist }}</span></h6>
-              <div class="d-flex align-items-center mt-1">
-                <img [src]="review.userAvatar" class="rounded-circle me-2" style="width: 16px; height: 16px;" alt="Avatar">
-                <span class="text-secondary" style="font-size: 0.8rem;">{{ review.username }} <span class="mx-1">•</span> {{ review.date }}</span>
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <a [routerLink]="['/album', review.artist, review.albumTitle]" class="text-decoration-none">
+                  <h6 class="fw-bold mb-0 text-white">{{ review.albumTitle }} <span class="text-secondary fw-normal"> — {{ review.artist }}</span></h6>
+                </a>
+                <div class="d-flex align-items-center mt-1">
+                <a [routerLink]="['/profile', review.userId]" class="text-decoration-none d-flex align-items-center mt-1">
+                  <img [src]="review.userAvatar" class="rounded-circle me-2 object-fit-cover" style="width: 20px; height: 20px; border: 1px solid rgba(255,255,255,0.1);" alt="Avatar">
+                  <span class="text-secondary" style="font-size: 0.8rem;">{{ review.username }} <span class="mx-1">•</span> {{ review.date }}</span>
+                </a>
+                </div>
+              </div>
+              <div class="text-warning-custom fs-6 d-flex align-items-center bg-dark bg-opacity-50 px-2 py-1 rounded">
+                <span class="fw-bold text-white me-2" style="font-size: 0.9rem;">{{ review.rating }}</span>
+                <span class="d-flex align-items-center" style="font-size: 0.75rem;">
+                  <!-- Estrellas llenas -->
+                  <i class="fa-solid fa-star" *ngFor="let s of fullStars(review.rating)"></i>
+                  <!-- Media estrella -->
+                  <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(review.rating)"></i>
+                  <!-- Estrellas vacías -->
+                  <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(review.rating)"></i>
+                </span>
               </div>
             </div>
-            <div class="text-warning-custom fs-6">
-              <i class="fa-solid fa-star me-1" *ngFor="let star of [1,2,3,4,5]"></i>
-            </div>
-          </div>
 
-          <h5 class="fw-bold text-white fs-6 mt-3 mb-2">{{ review.reviewTitle }}</h5>
-          <p class="review-card-text mb-3" style="line-height: 1.6;">{{ review.content }}</p>
-          
-          <div class="d-flex align-items-center text-secondary" style="font-size: 0.85rem;">
-            <i class="fa-regular fa-heart me-1"></i> {{ review.likes }}
+            <h5 class="fw-bold text-white fs-6 mt-3 mb-2">{{ review.reviewTitle }}</h5>
+            <p class="review-card-text mb-3" style="line-height: 1.6; font-size: 0.88rem;">{{ review.content }}</p>
+            
+            <div class="d-flex align-items-center">
+              <button class="btn btn-link p-0 text-decoration-none d-flex align-items-center" 
+                      (click)="onToggleLike(review)"
+                      [style.color]="review.likedByUser ? 'var(--accent-red)' : 'var(--text-secondary)'">
+                <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-1"></i>
+                <span style="font-size: 0.85rem;">{{ review.likes || 0 }} likes</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

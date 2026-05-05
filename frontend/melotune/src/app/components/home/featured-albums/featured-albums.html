@@ -1,21 +1,80 @@
 <div class="mb-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="section-title mb-0"><i class="fa-solid fa-fire text-accent-red"></i> ÁLBUMES DESTACADOS</h2>
-    <a href="#" class="link-see-all text-decoration-none">VER TODOS <i class="fa-solid fa-arrow-right"></i></a>
   </div>
-  
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-    <div class="col" *ngFor="let album of featuredAlbums">
-      <div class="album-card border-0 bg-transparent">
-        <div class="mt-card p-0 mb-3 overflow-hidden" style="aspect-ratio: 1; border-radius: 8px;">
-          <img [src]="album.image" class="w-100 h-100 object-fit-cover" [alt]="album.title">
-        </div>
-        <h5 class="fw-bold mb-1 text-white fs-6 text-truncate">{{ album.title }}</h5>
-        <p class="mb-1 text-secondary" style="font-size: 0.85rem;">{{ album.artist }}</p>
-        <div class="text-warning-custom fs-6">
-          <i class="fa-solid fa-star me-1" *ngFor="let star of [1,2,3,4,5]"></i>
-        </div>
-      </div>
+
+  <!-- Skeleton loader mientras carga -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" *ngIf="isLoading">
+    <div class="col" *ngFor="let s of [1,2,3,4]">
+      <div class="mt-card p-0 mb-3 overflow-hidden skeleton-pulse" style="aspect-ratio: 1; border-radius: 8px;"></div>
+      <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 80%;"></div>
+      <div class="skeleton-pulse rounded" style="height: 12px; width: 55%;"></div>
     </div>
   </div>
+
+  <!-- Marquee Infinito -->
+  <div class="marquee-outer" *ngIf="!isLoading" (mouseenter)="pauseMarquee()" (mouseleave)="resumeMarquee()">
+    <div class="marquee-track" [class.paused]="isPaused">
+
+      <!-- Lista original -->
+      <div class="carousel-item-custom" *ngFor="let album of featuredAlbums">
+        <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+          <div class="album-card border-0 bg-transparent">
+            <div class="mt-card p-0 mb-3 overflow-hidden" style="aspect-ratio: 1; border-radius: 8px;">
+              <img [src]="album.image || 'https://placehold.co/400x400/222436/60658a?text=No+Image'"
+                class="w-100 h-100 object-fit-cover" [alt]="album.title"
+                (error)="album.image = 'https://placehold.co/400x400/222436/60658a?text=No+Cover'">
+            </div>
+            <h5 class="fw-bold mb-1 text-white fs-6 text-truncate">{{ album.title }}</h5>
+            <p class="mb-1 text-secondary text-truncate" style="font-size: 0.85rem;">{{ album.artist }}</p>
+            <div class="d-flex align-items-center mt-1" *ngIf="album.plays > 0 || album.score">
+              <div class="me-auto">
+                <i class="fa-solid fa-headphones text-accent-red me-1" style="font-size: 0.75rem;"
+                  *ngIf="album.plays > 0"></i>
+                <span class="text-secondary" style="font-size: 0.78rem;" *ngIf="album.plays > 0">{{
+                  formatPlays(album.plays) }}</span>
+              </div>
+              <div class="text-warning-custom d-flex align-items-center" style="font-size: 0.65rem;"
+                *ngIf="album.score">
+                <i class="fa-solid fa-star" *ngFor="let s of fullStars(album.score)"></i>
+                <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(album.score)"></i>
+                <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(album.score)"></i>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Clon para el loop sin salto -->
+      <div class="carousel-item-custom" *ngFor="let album of featuredAlbums" aria-hidden="true">
+        <a [routerLink]="['/album', album.artist, album.title]" class="text-decoration-none">
+          <div class="album-card border-0 bg-transparent">
+            <div class="mt-card p-0 mb-3 overflow-hidden" style="aspect-ratio: 1; border-radius: 8px;">
+              <img [src]="album.image || 'https://placehold.co/400x400/222436/60658a?text=No+Image'"
+                class="w-100 h-100 object-fit-cover" [alt]="album.title"
+                (error)="album.image = 'https://placehold.co/400x400/222436/60658a?text=No+Cover'">
+            </div>
+            <h5 class="fw-bold mb-1 text-white fs-6 text-truncate">{{ album.title }}</h5>
+            <p class="mb-1 text-secondary text-truncate" style="font-size: 0.85rem;">{{ album.artist }}</p>
+            <div class="d-flex align-items-center mt-1" *ngIf="album.plays > 0 || album.score">
+              <div class="me-auto">
+                <i class="fa-solid fa-headphones text-accent-red me-1" style="font-size: 0.75rem;"
+                  *ngIf="album.plays > 0"></i>
+                <span class="text-secondary" style="font-size: 0.78rem;" *ngIf="album.plays > 0">{{
+                  formatPlays(album.plays) }}</span>
+              </div>
+              <div class="text-warning-custom d-flex align-items-center" style="font-size: 0.65rem;"
+                *ngIf="album.score">
+                <i class="fa-solid fa-star" *ngFor="let s of fullStars(album.score)"></i>
+                <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(album.score)"></i>
+                <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(album.score)"></i>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
 </div>

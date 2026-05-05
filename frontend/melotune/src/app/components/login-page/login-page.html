@@ -1,0 +1,65 @@
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card p-5 border-0 shadow-lg" style="background-color: var(--card-bg); max-width: 450px; width: 100%; border-radius: 15px;">
+    
+    <div class="text-center mb-4">
+      <h2 class="fw-bold text-white tracking-widest" style="letter-spacing: 2px;">MELOTUNE</h2>
+      <p class="text-secondary">{{ isRegisterMode ? 'Crea una cuenta nueva' : 'Inicia sesión en tu cuenta' }}</p>
+    </div>
+
+    <!-- Mensaje de éxito de registro -->
+    <div class="alert alert-success py-2" *ngIf="registrationSuccess">
+      ¡Cuenta creada! Hemos enviado un correo con un enlace para verificarla. Por favor revisa tu bandeja de entrada o spam.
+    </div>
+
+    <!-- Mensaje error (backend) -->
+    <div class="alert alert-danger py-2" *ngIf="errorMsg">
+      {{ errorMsg }}
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      
+      <!-- Campos de Registro Exclusivos -->
+      <ng-container *ngIf="isRegisterMode">
+        <div class="mb-3">
+          <label class="form-label text-secondary" style="font-size: 0.85rem; font-weight: 600;">Nombre de Usuario (Username) *</label>
+          <input type="text" class="form-control" name="username" [(ngModel)]="username" required
+                 style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-secondary" style="font-size: 0.85rem; font-weight: 600;">Nombre y Apellidos</label>
+          <input type="text" class="form-control" name="nombre" [(ngModel)]="nombre"
+                 style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+        </div>
+      </ng-container>
+
+      <!-- Campos Comunes -->
+      <div class="mb-3">
+        <label class="form-label text-secondary" style="font-size: 0.85rem; font-weight: 600;">Correo Electrónico *</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="email" required
+               style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label text-secondary d-flex justify-content-between" style="font-size: 0.85rem; font-weight: 600;">
+          Contraseña *
+          <a href="#" *ngIf="!isRegisterMode" class="text-accent-red text-decoration-none">¿Olvidaste tu contraseña?</a>
+        </label>
+        <input type="password" class="form-control" name="password" [(ngModel)]="password" required
+               style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
+      </div>
+
+      <button type="submit" class="btn w-100 fw-bold text-white text-uppercase tracking-wider" [disabled]="isLoading"
+              style="background-color: var(--accent-red); padding: 0.75rem; letter-spacing: 1px;">
+        <span *ngIf="!isLoading">{{ isRegisterMode ? 'Registrarme' : 'Iniciar Sesión' }}</span>
+        <span *ngIf="isLoading"><i class="fa-solid fa-spinner fa-spin"></i> Espere...</span>
+      </button>
+
+      <!-- Toggle Login/Register -->
+      <div class="text-center mt-4 text-secondary" style="font-size: 0.9rem;">
+        <span *ngIf="!isRegisterMode">¿No tienes cuenta? <a href="#" class="text-white fw-bold text-decoration-none" (click)="toggleMode($event)">Regístrate aquí</a></span>
+        <span *ngIf="isRegisterMode">¿Ya tienes cuenta? <a href="#" class="text-white fw-bold text-decoration-none" (click)="toggleMode($event)">Inicia sesión aquí</a></span>
+      </div>
+    </form>
+
+  </div>
+</div>
