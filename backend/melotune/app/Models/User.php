@@ -16,6 +16,8 @@ class User extends Authenticatable
 
     protected $table = 'usuarios';
     public $timestamps = false;
+    const CREATED_AT = 'fecha_registro';
+    const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.

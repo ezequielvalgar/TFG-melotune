@@ -28,7 +28,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'http://localhost:8000/api';
 
   private paramsSub?: Subscription;
   private authSub?: Subscription;
@@ -234,6 +234,15 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    this.reviewService.getFavoriteArtists(userId).pipe(take(1)).subscribe({
+      next: (artists: any[]) => {
+        this.zone.run(() => {
+          this.favoriteArtists = artists;
+          this.cdr.detectChanges();
+        });
+      }
+    });
   }
 
   loadReviewAlbumsImages(): void {
@@ -284,6 +293,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   stats = { resenas: 0, seguidores: 0, siguiendo: 0 };
   userReviews: any[] = [];
   favoriteAlbums: any[] = [];
+  favoriteArtists: any[] = [];
   savedAlbums: any[] = [];
   recentlyPlayed: any[] = [];
   activityFeed: any[] = [];
@@ -307,9 +317,14 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   get formattedRegistrationDate(): string {
-    if (!this.user?.fecha_registro) return 'Hoy';
-    const d = new Date(this.user.fecha_registro);
-    if (isNaN(d.getTime())) return this.user.fecha_registro;
+    const fecha = this.user?.fecha_registro || this.user?.created_at;
+    if (!fecha) return 'Hace mucho tiempo';
+    
+    // Replace space with T for cross-browser compatibility (e.g. Safari)
+    const parsedFecha = typeof fecha === 'string' ? fecha.replace(' ', 'T') : fecha;
+    const d = new Date(parsedFecha);
+    
+    if (isNaN(d.getTime())) return 'Hace mucho tiempo';
     const str = d.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
     return str.charAt(0).toUpperCase() + str.slice(1);
   }

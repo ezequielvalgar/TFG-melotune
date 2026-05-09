@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-lg position-relative z-3" style="background-color: var(--header-bg); padding: 1rem 0;">
+<nav class="navbar navbar-expand-lg position-relative z-3" 
+     [style.background-color]="'var(--header-bg)'"
+     style="padding: 1rem 0;">
   <div class="container d-flex align-items-center justify-content-between">
     <!-- Logotipo / Marca -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
@@ -63,14 +65,24 @@
               <a class="dropdown-item-custom" routerLink="/profile" (click)="isDropdownOpen = false"><i class="fa-regular fa-user item-icon"></i> Mi perfil</a>
               <button class="dropdown-item-custom" style="background:none;border:none;width:100%;text-align:left;" (click)="openSearch()"><i class="fa-regular fa-pen-to-square item-icon"></i> Nueva reseña</button>
               <a class="dropdown-item-custom" [routerLink]="['/profile']" fragment="favoritos" (click)="isDropdownOpen = false"><i class="fa-regular fa-heart item-icon"></i> Mis favoritos</a>
-              <a class="dropdown-item-custom"><i class="fa-solid fa-book-bookmark item-icon"></i> Guardados</a>
             </div>
             
             <hr class="dropdown-divider-custom m-0">
             
             <!-- Preferencias y Salir -->
             <div class="py-2">
-              <a class="dropdown-item-custom" routerLink="/ajustes" (click)="isDropdownOpen = false"><i class="fa-solid fa-gear item-icon"></i> Ajustes</a>
+              <div class="dropdown-item-custom d-flex justify-content-between align-items-center" 
+                   style="cursor: default;" (click)="$event.stopPropagation()">
+                <div>
+                  <i class="fa-solid fa-circle-half-stroke item-icon"></i> Tema
+                </div>
+                <button class="btn btn-sm border-secondary rounded-pill text-secondary d-flex align-items-center gap-1"
+                        style="font-size: 0.75rem; padding: 0.2rem 0.6rem;"
+                        (click)="toggleTheme()">
+                  <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+                  {{ isDarkMode ? 'Claro' : 'Oscuro' }}
+                </button>
+              </div>
               <a class="dropdown-item-custom item-logout text-danger mt-1" (click)="logout()">
                 <i class="fa-solid fa-arrow-right-from-bracket item-icon text-danger"></i> Cerrar sesion
               </a>

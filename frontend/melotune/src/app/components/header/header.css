@@ -49,8 +49,8 @@
   top: 130%; /* Empuja hacia abajo desde la foto */
   right: 0;
   width: 250px;
-  background-color: rgba(30, 32, 50, 0.98); /* Oscuro muy opaco casi azul marino oscuro */
-  border: 1px solid rgba(255, 255, 255, 0.08); /* Borde súper sutil */
+  background-color: var(--header-bg); /* Oscuro muy opaco casi azul marino oscuro */
+  border: 1px solid var(--card-border); /* Borde súper sutil */
   border-radius: 10px;
   z-index: 1050;
   display: flex;
@@ -69,7 +69,7 @@
 }
 
 .dropdown-divider-custom {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--card-border);
   margin: 0;
 }
 
@@ -77,7 +77,7 @@
   display: flex;
   align-items: center;
   padding: 0.7rem 1.5rem;
-  color: rgba(255, 255, 255, 0.85); /* Gris clarito */
+  color: var(--text-primary); /* Gris clarito */
   font-weight: 500;
   font-size: 0.95rem;
   text-decoration: none;
@@ -86,15 +86,15 @@
 }
 
 .dropdown-item-custom:hover {
-  background-color: rgba(255, 255, 255, 0.05); /* Hover iluminado muy sutil */
-  color: #fff;
+  background-color: var(--card-border); /* Hover iluminado muy sutil */
+  color: var(--text-primary);
 }
 
 /* Iconos de la izquierda del dropdown */
 .dropdown-item-custom .item-icon {
   width: 20px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 

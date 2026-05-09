@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ReviewAlbum;
 use App\Models\FavoriteAlbum;
 use App\Models\LikeReview;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,7 @@ class UserStatsController extends Controller
     /**
      * Obtener estadísticas globales de un usuario.
      */
-    public function getStats(Request $request, $userId)
+    public function getStats(Request $request, $userId): JsonResponse
     {
         $reviews = ReviewAlbum::where('usuario_id', $userId)->get();
         
@@ -56,7 +57,7 @@ class UserStatsController extends Controller
     /**
      * Obtener feed de actividad reciente del usuario.
      */
-    public function getActivity(Request $request, $userId)
+    public function getActivity(Request $request, $userId): JsonResponse
     {
         // 1. Últimas reseñas
         $recentReviews = ReviewAlbum::with('album')
@@ -105,7 +106,7 @@ class UserStatsController extends Controller
     /**
      * Listar álbumes favoritos.
      */
-    public function getFavorites(Request $request, $userId)
+    public function getFavorites(Request $request, $userId): JsonResponse
     {
         $favs = FavoriteAlbum::where('usuario_id', $userId)->latest()->get();
         return response()->json($favs);
@@ -114,7 +115,7 @@ class UserStatsController extends Controller
     /**
      * Toggle favorito de un álbum.
      */
-    public function toggleFavorite(Request $request)
+    public function toggleFavorite(Request $request): JsonResponse
     {
         $request->validate([
             'album_titulo'  => 'required|string',
@@ -142,5 +143,44 @@ class UserStatsController extends Controller
         ]);
 
         return response()->json(['status' => 'added', 'favorited' => true]);
+    }
+
+    /**
+     * Listar artistas favoritos de un usuario.
+     */
+    public function getFavoriteArtists(Request $request, $userId): JsonResponse
+    {
+        $favs = \App\Models\FavoriteArtist::where('usuario_id', $userId)->latest('id')->get();
+        return response()->json($favs);
+    }
+
+    /**
+     * Toggle favorito de un artista.
+     */
+    public function toggleFavoriteArtist(Request $request): JsonResponse
+    {
+        $request->validate([
+            'artist_nombre' => 'required|string',
+            'artist_imagen' => 'nullable|string',
+        ]);
+
+        $userId = $request->user()->id;
+
+        $existing = \App\Models\FavoriteArtist::where('usuario_id', $userId)
+            ->where('artist_nombre', $request->artist_nombre)
+            ->first();
+
+        if ($existing) {
+            $existing->delete();
+            return response()->json(['status' => 'removed']);
+        }
+
+        \App\Models\FavoriteArtist::create([
+            'usuario_id'    => $userId,
+            'artist_nombre' => $request->artist_nombre,
+            'artist_imagen' => $request->artist_imagen,
+        ]);
+
+        return response()->json(['status' => 'added']);
     }
 }

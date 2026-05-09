@@ -28,7 +28,7 @@ export class VerifyEmailComponent implements OnInit {
         return;
       }
 
-      this.http.post('http://127.0.0.1:8000/api/verify-email', { token }).subscribe({
+      this.http.post('http://localhost:8000/api/verify-email', { token }).subscribe({
         next: (res: any) => {
           this.status = 'success';
           this.message = '¡Tu correo ha sido verificado con éxito! Ya puedes iniciar sesión.';

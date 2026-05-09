@@ -25,7 +25,8 @@ class ReviewController extends Controller
         $userId = null;
         if ($request->bearerToken()) {
             $user = $request->user('sanctum');
-            if ($user) $userId = $user->id;
+            if ($user)
+                $userId = $user->id;
         }
 
         $reviews->getCollection()->transform(function ($review) use ($userId) {
@@ -44,7 +45,8 @@ class ReviewController extends Controller
         $authUserId = null;
         if ($request->bearerToken()) {
             $user = $request->user('sanctum');
-            if ($user) $authUserId = $user->id;
+            if ($user)
+                $authUserId = $user->id;
         }
 
         $reviews = ReviewAlbum::with(['usuario', 'album.artista'])
@@ -65,18 +67,19 @@ class ReviewController extends Controller
         $authUserId = null;
         if ($request->bearerToken()) {
             $user = $request->user('sanctum');
-            if ($user) $authUserId = $user->id;
+            if ($user)
+                $authUserId = $user->id;
         }
 
         $reviews = ReviewAlbum::with(['usuario', 'album.artista'])
-            ->whereHas('album', function($q) use ($artist, $title) {
+            ->whereHas('album', function ($q) use ($artist, $title) {
                 $q->where('titulo', 'like', $title)
-                  ->where(function($qArtist) use ($artist) {
-                      $qArtist->where('artista_nombre', 'like', $artist)
-                              ->orWhereHas('artista', function($qA) use ($artist) {
-                                  $qA->where('nombre', 'like', $artist);
-                              });
-                  });
+                    ->where(function ($qArtist) use ($artist) {
+                        $qArtist->where('artista_nombre', 'like', $artist)
+                            ->orWhereHas('artista', function ($qA) use ($artist) {
+                                $qA->where('nombre', 'like', $artist);
+                            });
+                    });
             })
             ->orderBy('fecha_creacion', 'desc')
             ->get()
@@ -92,70 +95,72 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'album_titulo'  => 'required|string|max:200',
+            'album_titulo' => 'required|string|max:200',
             'album_artista' => 'required|string|max:200',
             'album_portada' => 'nullable|string|max:500',
-            'calificacion'  => 'required|numeric|min:0.5|max:5',
-            'titulo'        => 'nullable|string|max:200',
-            'contenido'     => 'nullable|string|max:5000',
+            'calificacion' => 'required|numeric|min:0.5|max:5',
+            'titulo' => 'nullable|string|max:200',
+            'contenido' => 'nullable|string|max:5000',
         ]);
 
         $user = $request->user();
-
-        // 1. Buscar o crear el artista
         $artista = Artista::firstOrCreate(
             ['nombre' => $request->album_artista],
             ['nombre' => $request->album_artista]
         );
 
-        // 2. Buscar o crear el álbum
+
         $album = Album::firstOrCreate(
             ['titulo' => $request->album_titulo, 'artista_id' => $artista->id],
             [
-                'titulo'         => $request->album_titulo,
-                'artista_id'     => $artista->id,
+                'titulo' => $request->album_titulo,
+                'artista_id' => $artista->id,
                 'artista_nombre' => $request->album_artista,
-                'portada'        => $request->album_portada,
-                'imagen_url'     => $request->album_portada,
+                'portada' => $request->album_portada,
+                'imagen_url' => $request->album_portada,
             ]
         );
 
-        // 3. Verificar si ya tiene una reseña de este álbum (unique constraint)
+
         $existing = ReviewAlbum::where('usuario_id', $user->id)
             ->where('album_id', $album->id)
             ->first();
 
         if ($existing) {
-            // Actualizar la reseña existente
+
             $existing->update([
-                'calificacion'   => $request->calificacion,
-                'titulo'         => $request->titulo,
-                'contenido'      => $request->contenido,
-                'etiquetas'      => $request->etiquetas ?? [],
-                'encuesta'       => $request->encuesta ?? null,
+                'calificacion' => $request->calificacion,
+                'titulo' => $request->titulo,
+                'contenido' => $request->contenido,
+                'etiquetas' => $request->etiquetas ?? [],
+                'encuesta' => $request->encuesta ?? null,
                 'preguntas_guia' => $request->preguntas_guia ?? null,
                 'contexto_escucha' => $request->contexto_escucha,
                 'cancion_favorita' => $request->cancion_favorita,
-                'vibe_factor'    => $request->vibe_factor,
+                'vibe_factor' => $request->vibe_factor,
+                'evolucion' => $request->evolucion,
+                'primera_mencion' => $request->primera_mencion,
             ]);
             $review = $existing->fresh(['usuario', 'album.artista']);
             return response()->json($this->formatReview($review, $user->id), 200);
         }
 
-        // 4. Crear la reseña nueva
+
         $review = ReviewAlbum::create([
-            'usuario_id'     => $user->id,
-            'album_id'       => $album->id,
-            'calificacion'   => $request->calificacion,
-            'titulo'         => $request->titulo,
-            'contenido'      => $request->contenido,
-            'etiquetas'      => $request->etiquetas ?? [],
-            'encuesta'       => $request->encuesta ?? null,
+            'usuario_id' => $user->id,
+            'album_id' => $album->id,
+            'calificacion' => $request->calificacion,
+            'titulo' => $request->titulo,
+            'contenido' => $request->contenido,
+            'etiquetas' => $request->etiquetas ?? [],
+            'encuesta' => $request->encuesta ?? null,
             'preguntas_guia' => $request->preguntas_guia ?? null,
             'contexto_escucha' => $request->contexto_escucha,
             'cancion_favorita' => $request->cancion_favorita,
-            'vibe_factor'    => $request->vibe_factor,
-            'likes'          => 0,
+            'vibe_factor' => $request->vibe_factor,
+            'evolucion' => $request->evolucion,
+            'primera_mencion' => $request->primera_mencion,
+            'likes' => 0,
         ]);
 
         $review->load(['usuario', 'album.artista']);
@@ -176,16 +181,16 @@ class ReviewController extends Controller
             ->first();
 
         if ($existing) {
-            // Ya le dio like → quitar like
+
             $existing->delete();
             $review->decrement('likes');
             return response()->json(['liked' => false, 'likes' => $review->fresh()->likes]);
         } else {
-            // No tiene like → dar like
+
             LikeReview::create([
                 'usuario_id' => $user->id,
-                'review_id'  => $id,
-                'fecha'      => now(),
+                'review_id' => $id,
+                'fecha' => now(),
             ]);
             $review->increment('likes');
             return response()->json(['liked' => true, 'likes' => $review->fresh()->likes]);
@@ -238,39 +243,43 @@ class ReviewController extends Controller
         $vibe = $this->calcVibe($review->vibe_factor);
 
         return [
-            'id'          => $review->id,
-            'albumTitle'  => $album?->titulo ?? '—',
-            'artist'      => $artista?->nombre ?? $album?->artista_nombre ?? '—',
-            'albumImage'  => $albumImage,
-            'username'    => $review->usuario?->username ?? 'anon',
-            'userAvatar'  => $this->getAvatarUrl($review->usuario),
-            'userId'      => $review->usuario_id,
-            'date'        => $review->fecha_creacion
+            'id' => $review->id,
+            'albumTitle' => $album?->titulo ?? '—',
+            'artist' => $artista?->nombre ?? $album?->artista_nombre ?? '—',
+            'albumImage' => $albumImage,
+            'username' => $review->usuario?->username ?? 'anon',
+            'userAvatar' => $this->getAvatarUrl($review->usuario),
+            'userId' => $review->usuario_id,
+            'date' => $review->fecha_creacion
                 ? \Carbon\Carbon::parse($review->fecha_creacion)->locale('es')->isoFormat('D [de] MMMM [de] YYYY')
                 : '',
             'reviewTitle' => $review->titulo ?? '',
-            'content'     => $review->contenido ?? '',
-            'rating'      => (float) $review->calificacion,
-            'likes'       => (int) $review->likes,
+            'content' => $review->contenido ?? '',
+            'rating' => (float) $review->calificacion,
+            'likes' => (int) $review->likes,
             'likedByUser' => $likedByUser,
-            'tags'        => $review->etiquetas ?? [],
-            'encuesta'    => $review->encuesta,
+            'tags' => $review->etiquetas ?? [],
+            'encuesta' => $review->encuesta,
             'preguntasGuia' => $review->preguntas_guia,
             'contextoEscucha' => $review->contexto_escucha,
-            'favoriteSong'   => $review->cancion_favorita ?? '',
-            'vibeFactor'  => $review->vibe_factor,
-            'vibeIcon'    => $vibe['icon'],
-            'vibeColor'   => $vibe['color'],
-            'vibeMood'    => $vibe['mood'],
-            'comments'    => 0,
+            'favoriteSong' => $review->cancion_favorita ?? null,
+            'listenCount' => $review->numero_escuchas ?? null,
+            'evolucion' => $review->evolucion ?? null,
+            'primera_mencion' => $review->primera_mencion ?? null,
+            'vibeFactor' => $review->vibe_factor,
+            'vibeIcon' => $vibe['icon'],
+            'vibeColor' => $vibe['color'],
+            'vibeMood' => $vibe['mood'],
+            'comments' => 0,
         ];
     }
 
     private function getAvatarUrl($usuario): string
     {
-        if (!$usuario) return 'https://ui-avatars.com/api/?name=Anon&background=1a1c2e&color=E83E8C&bold=true';
+        if (!$usuario)
+            return 'https://ui-avatars.com/api/?name=Anon&background=1a1c2e&color=E83E8C&bold=true';
         $foto = $usuario->foto_perfil;
-        
+
         if (empty($foto) || $foto === 'default.jpg' || $foto === 'avatar1.jpg') {
             return 'https://ui-avatars.com/api/?name=' . urlencode($usuario->username) . '&background=1a1c2e&color=E83E8C&size=200&bold=true';
         }

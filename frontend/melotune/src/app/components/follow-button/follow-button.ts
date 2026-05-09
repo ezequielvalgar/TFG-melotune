@@ -51,7 +51,9 @@ export class FollowButtonComponent implements OnInit {
         this.isFollowing = stats.is_following;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al obtener estado de seguimiento', err)
+      error: () => {
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -73,8 +75,7 @@ export class FollowButtonComponent implements OnInit {
           this.followChanged.emit(false);
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.error('Error unfollowing', err);
+        error: () => {
           this.isLoading = false;
           this.cdr.detectChanges();
         }
@@ -87,8 +88,7 @@ export class FollowButtonComponent implements OnInit {
           this.followChanged.emit(true);
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.error('Error following', err);
+        error: () => {
           this.isLoading = false;
           this.cdr.detectChanges();
         }

@@ -105,6 +105,17 @@
                             <p class="text-secondary mb-0" style="font-size:0.88rem;line-height:1.6;">
                                 {{ review.content }}
                             </p>
+
+                            <!-- Like -->
+                            <div class="d-flex align-items-center mt-3">
+                                <button class="btn btn-link p-0 text-decoration-none like-btn d-flex align-items-center"
+                                        [style.color]="review.likedByUser ? 'var(--accent-red)' : 'var(--text-secondary)'"
+                                        (click)="onToggleLike(review)"
+                                        style="font-size: 0.9rem;">
+                                    <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-2 fs-5"></i>
+                                    {{ review.likes || 0 }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

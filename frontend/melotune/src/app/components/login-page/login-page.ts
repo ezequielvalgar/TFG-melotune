@@ -25,6 +25,7 @@ export class LoginPageComponent {
   isLoading = false;
   isRegisterMode = false;
   registrationSuccess = false;
+  showPassword = false;
 
   toggleMode(event: Event) {
     event.preventDefault();
@@ -59,7 +60,6 @@ export class LoginPageComponent {
           this.errorMsg = '';
         },
         error: (err) => {
-          console.error("Error en registro:", err);
           this.handleBackendError(err);
         }
       });
@@ -75,7 +75,6 @@ export class LoginPageComponent {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          console.error("Error en login:", err);
           this.errorMsg = err.error?.message || 'Error al iniciar sesión.';
         }
       });

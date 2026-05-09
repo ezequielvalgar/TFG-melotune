@@ -1,9 +1,9 @@
 <div class="container py-5 mt-3 create-review-container">
-  
+
   <!-- Cabecera Central -->
   <div class="d-flex justify-content-between align-items-center mb-5">
     <button class="btn btn-red-neon px-4 py-2" style="pointer-events: none;">RESEÑA</button>
-    
+
     <div class="d-flex align-items-center gap-3">
       <div class="progress-track">
         <div class="progress-fill" [style.width.%]="progress"></div>
@@ -13,141 +13,148 @@
   </div>
 
   <div class="row gx-5">
-    
+
     <!-- Columna Izquierda (Formulario Principal) -->
     <div class="col-12 col-lg-7 mb-5 mb-lg-0">
-      
+
       <!-- Titulo -->
       <div class="mb-4 position-relative">
         <label class="form-label d-block text-uppercase">Titulo</label>
-        <input type="text" class="form-control form-control-lg custom-input py-3 px-4" 
-               placeholder="Escribe el titulo de tu reseña..." 
-               [(ngModel)]="title" maxlength="100">
+        <input type="text" class="form-control form-control-lg custom-input py-3 px-4"
+          placeholder="Escribe el titulo de tu reseña..." [(ngModel)]="title" maxlength="100">
         <div class="text-end text-secondary mt-1" style="font-size: 0.75rem;">{{ title.length }}/100</div>
       </div>
 
       <!-- Reseña -->
       <div class="mb-4">
         <label class="form-label d-block text-uppercase">Tu reseña</label>
-        <textarea class="form-control custom-input py-3 px-4" rows="8" 
-                  placeholder="Comparte tus pensamientos sobre este album..." 
-                  [(ngModel)]="text" maxlength="2000"></textarea>
+        <textarea class="form-control custom-input py-3 px-4" rows="8"
+          placeholder="Comparte tus pensamientos sobre este album..." [(ngModel)]="text" maxlength="2000"></textarea>
         <div class="text-end text-secondary mt-1" style="font-size: 0.75rem;">{{ text.length }}/2000</div>
       </div>
 
       <!-- Etiquetas -->
       <div class="mb-5">
-        <label class="form-label d-block text-uppercase">Etiquetas <span class="text-secondary fw-normal text-none-transform">(Máx. 5)</span></label>
+        <label class="form-label d-block text-uppercase">Etiquetas <span
+            class="text-secondary fw-normal text-none-transform">(Máx. 5)</span></label>
         <div class="d-flex flex-wrap gap-2 mt-3">
-          <div class="tag-badge" 
-               *ngFor="let tag of availableTags"
-               [class.active]="selectedTags.includes(tag)"
-               (click)="toggleTag(tag)">
+          <div class="tag-badge" *ngFor="let tag of availableTags" [class.active]="selectedTags.includes(tag)"
+            (click)="toggleTag(tag)">
             {{ tag }}
           </div>
         </div>
       </div>
 
-      <!-- Preguntas Guía -->
-      <div class="mb-5">
-        <label class="form-label d-block text-uppercase mb-4">Preguntas Guía</label>
-        
-        <div class="mb-4">
-          <div class="form-label mb-2 text-white opacity-100" style="text-transform: none; font-size: 0.9rem;">¿Cuál es tu canción favorita y por qué?</div>
-          <input type="text" class="form-control custom-input p-3" [(ngModel)]="qFavSong">
+      <!-- Canción Favorita -->
+      <div class="mb-4">
+        <label class="form-label text-white fw-bold mb-2">
+          <i class="fa-solid fa-music text-accent-red me-2"></i>
+          Canción favorita <span class="text-secondary fw-normal" style="font-size:0.8rem;">(opcional)</span>
+        </label>
+
+        <!-- Si tiene tracklist: selector -->
+        <div *ngIf="hasTracks">
+          <select class="form-select bg-dark text-white border-secondary" [(ngModel)]="selectedFavoriteSong">
+            <option value="">— Selecciona una canción —</option>
+            <option *ngFor="let track of album.tracks" [value]="track.name">
+              {{ track.name }}
+            </option>
+          </select>
         </div>
 
+        <!-- Si no tiene tracklist: input libre -->
+        <div *ngIf="!hasTracks">
+          <input type="text" class="form-control bg-dark text-white border-secondary" [(ngModel)]="favoriteSongText"
+            placeholder="Escribe el nombre de tu canción favorita" maxlength="100">
+        </div>
+      </div>
+
+      <!-- Preguntas Guía (legacy) -->
+      <div class="mb-5">
+        <label class="form-label d-block text-uppercase mb-4">Preguntas Guía</label>
+
         <div class="mb-4">
-          <div class="form-label mb-2 text-white opacity-100" style="text-transform: none; font-size: 0.9rem;">¿Qué emociones te transmite este álbum?</div>
+          <div class="form-label mb-2 text-white opacity-100" style="text-transform: none; font-size: 0.9rem;">¿Qué
+            emociones te transmite este álbum?</div>
           <input type="text" class="form-control custom-input p-3" [(ngModel)]="qEmotions">
         </div>
 
         <div class="mb-4">
-          <div class="form-label mb-2 text-white opacity-100" style="text-transform: none; font-size: 0.9rem;">¿A quién le recomendarías este álbum?</div>
+          <div class="form-label mb-2 text-white opacity-100" style="text-transform: none; font-size: 0.9rem;">¿A quién
+            le recomendarías este álbum?</div>
           <input type="text" class="form-control custom-input p-3" [(ngModel)]="qRecommend">
         </div>
       </div>
 
-      <!-- Canciones Puntuables (Accordion Manual) -->
-      <div class="mb-5">
-        <button class="btn w-100 text-start d-flex justify-content-between align-items-center p-0 text-white" 
-                style="box-shadow: none;"
-                (click)="showTracks = !showTracks">
-          <span class="fw-bold opacity-75 text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">
-            <i class="fa-solid fa-music me-2"></i> Puntuar canciones (Opcional)
-          </span>
-          <i class="fa-solid" [ngClass]="showTracks ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-        </button>
-
-        <div class="tracklist-card mt-3 p-3 overflow-auto" style="max-height: 400px;" *ngIf="showTracks">
-          <div class="track-row d-flex align-items-center justify-content-between" *ngFor="let track of trackRatings; let i = index">
-            
-            <div class="d-flex align-items-center gap-3 w-50 pe-3 overflow-hidden text-nowrap" style="text-overflow: ellipsis;">
-              <i class="fa-heart track-heart" 
-                 [ngClass]="track.favorite ? 'fa-solid active' : 'fa-regular'"
-                 (click)="toggleTrackFav(i)"></i>
-              <span class="text-secondary" style="font-size: 0.85rem; width: 20px;">{{ i + 1 }}.</span>
-              <span class="text-white fw-bold" style="font-size: 0.9rem;">{{ track.name }}</span>
-            </div>
-
-            <!-- Estrellas Canción -->
-            <div class="mini-star-rating d-flex gap-1" (mouseleave)="clearTrackHover(i)">
-               <i class="fa-star"
-                 [ngClass]="(track.hoverRating || track.rating) >= 1 ? 'fa-solid active' : 'fa-regular'"
-                 (mouseenter)="setTrackHover(i, 1)" (click)="setTrackRating(i, 1)"></i>
-               <i class="fa-star"
-                 [ngClass]="(track.hoverRating || track.rating) >= 2 ? 'fa-solid active' : 'fa-regular'"
-                 (mouseenter)="setTrackHover(i, 2)" (click)="setTrackRating(i, 2)"></i>
-               <i class="fa-star"
-                 [ngClass]="(track.hoverRating || track.rating) >= 3 ? 'fa-solid active' : 'fa-regular'"
-                 (mouseenter)="setTrackHover(i, 3)" (click)="setTrackRating(i, 3)"></i>
-               <i class="fa-star"
-                 [ngClass]="(track.hoverRating || track.rating) >= 4 ? 'fa-solid active' : 'fa-regular'"
-                 (mouseenter)="setTrackHover(i, 4)" (click)="setTrackRating(i, 4)"></i>
-               <i class="fa-star"
-                 [ngClass]="(track.hoverRating || track.rating) >= 5 ? 'fa-solid active' : 'fa-regular'"
-                 (mouseenter)="setTrackHover(i, 5)" (click)="setTrackRating(i, 5)"></i>
-            </div>
-            
-          </div>
+      <!-- Pregunta guía 1: Evolución -->
+      <div class="mb-4">
+        <label class="form-label text-white fw-bold mb-2">
+          <i class="fa-solid fa-clock-rotate-left text-accent-red me-2"></i>
+          ¿Crees que este álbum te cambiará con el tiempo?
+          <span class="text-secondary fw-normal" style="font-size:0.8rem;">(opcional)</span>
+        </label>
+        <div class="d-flex gap-3 flex-wrap">
+          <button type="button" class="btn rounded-pill px-4 py-2 fw-bold"
+            [ngClass]="evolucion === 'crece' ? 'bg-accent-red text-white' : 'btn-outline-secondary text-secondary'"
+            (click)="evolucion = evolucion === 'crece' ? '' : 'crece'">
+            <i class="fa-solid fa-seedling me-2"></i> Crece con el tiempo
+          </button>
+          <button type="button" class="btn rounded-pill px-4 py-2 fw-bold"
+            [ngClass]="evolucion === 'inmediato' ? 'bg-accent-red text-white' : 'btn-outline-secondary text-secondary'"
+            (click)="evolucion = evolucion === 'inmediato' ? '' : 'inmediato'">
+            <i class="fa-solid fa-bolt me-2"></i> Impacto inmediato
+          </button>
         </div>
       </div>
+
+      <!-- Pregunta guía 2: Primera mención -->
+      <div class="mb-5">
+        <label class="form-label text-white fw-bold mb-2">
+          <i class="fa-solid fa-comment-dots text-accent-red me-2"></i>
+          ¿Qué es lo primero que le dirías a alguien que nunca lo ha escuchado?
+          <span class="text-secondary fw-normal" style="font-size:0.8rem;">(opcional · máx. 100 caracteres)</span>
+        </label>
+        <input type="text" class="form-control bg-dark text-white border-secondary" [(ngModel)]="primeraMention"
+          placeholder="Una frase que lo defina todo..." maxlength="100">
+        <div class="text-end text-secondary mt-1" style="font-size:0.75rem;">
+          {{ primeraMention.length }}/100
+        </div>
+      </div>
+
     </div>
 
 
     <!-- Columna Derecha -->
     <div class="col-12 col-lg-5 ps-lg-4">
-      
+
       <!-- Ficha del Disco Principal y Rating -->
       <div class="text-center mb-5">
-        <div class="album-card rounded overflow-hidden mb-3 bg-dark" style="aspect-ratio: 1/1; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-          <img [src]="album?.image || 'https://placehold.co/300/222436/60658a?text=Álbum'" class="w-100 h-100 object-fit-cover" alt="Portada">
+        <div class="album-card rounded overflow-hidden mb-3 bg-dark"
+          style="aspect-ratio: 1/1; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <img [src]="album?.image || 'https://placehold.co/300/222436/60658a?text=Álbum'"
+            class="w-100 h-100 object-fit-cover" alt="Portada">
         </div>
         <h4 class="text-white fw-bold mb-1">{{ album?.name }}</h4>
         <div class="text-secondary" style="font-size: 0.95rem;">{{ album?.artist }}</div>
         <div class="text-secondary mb-3" style="font-size: 0.85rem;">{{ album?.year || '2024' }}</div>
-        
+
         <!-- Puntuación (Estrellas Álbum) -->
         <div class="star-rating d-flex justify-content-center gap-2 mt-2 fs-2" (mouseleave)="clearHover()">
-          <i class="fa-star"
-             [ngClass]="(hoverRating || rating) >= 1 ? 'fa-solid active' : 'fa-regular'"
-             (mouseenter)="setHoverRating(1)" (click)="setRating(1)"></i>
-          <i class="fa-star"
-             [ngClass]="(hoverRating || rating) >= 2 ? 'fa-solid active' : 'fa-regular'"
-             (mouseenter)="setHoverRating(2)" (click)="setRating(2)"></i>
-          <i class="fa-star"
-             [ngClass]="(hoverRating || rating) >= 3 ? 'fa-solid active' : 'fa-regular'"
-             (mouseenter)="setHoverRating(3)" (click)="setRating(3)"></i>
-          <i class="fa-star"
-             [ngClass]="(hoverRating || rating) >= 4 ? 'fa-solid active' : 'fa-regular'"
-             (mouseenter)="setHoverRating(4)" (click)="setRating(4)"></i>
-          <i class="fa-star"
-             [ngClass]="(hoverRating || rating) >= 5 ? 'fa-solid active' : 'fa-regular'"
-             (mouseenter)="setHoverRating(5)" (click)="setRating(5)"></i>
+          <i class="fa-star" [ngClass]="(hoverRating || rating) >= 1 ? 'fa-solid active' : 'fa-regular'"
+            (mouseenter)="setHoverRating(1)" (click)="setRating(1)"></i>
+          <i class="fa-star" [ngClass]="(hoverRating || rating) >= 2 ? 'fa-solid active' : 'fa-regular'"
+            (mouseenter)="setHoverRating(2)" (click)="setRating(2)"></i>
+          <i class="fa-star" [ngClass]="(hoverRating || rating) >= 3 ? 'fa-solid active' : 'fa-regular'"
+            (mouseenter)="setHoverRating(3)" (click)="setRating(3)"></i>
+          <i class="fa-star" [ngClass]="(hoverRating || rating) >= 4 ? 'fa-solid active' : 'fa-regular'"
+            (mouseenter)="setHoverRating(4)" (click)="setRating(4)"></i>
+          <i class="fa-star" [ngClass]="(hoverRating || rating) >= 5 ? 'fa-solid active' : 'fa-regular'"
+            (mouseenter)="setHoverRating(5)" (click)="setRating(5)"></i>
         </div>
 
         <div class="d-flex justify-content-center gap-3 mt-4">
-          <button class="btn-small-action" [class.active]="isAlbumFavorite" (click)="isAlbumFavorite = !isAlbumFavorite">
+          <button class="btn-small-action" [class.active]="isAlbumFavorite"
+            (click)="isAlbumFavorite = !isAlbumFavorite">
             <i class="fa-heart me-1" [ngClass]="isAlbumFavorite ? 'fa-solid' : 'fa-regular'"></i> Favorito
           </button>
           <button class="btn-small-action" [class.active]="isAlbumSaved" (click)="isAlbumSaved = !isAlbumSaved">
@@ -159,27 +166,32 @@
       <!-- Contexto de Escucha -->
       <div class="secondary-card p-4 mb-4">
         <h6 class="box-title mb-4">Contexto de escucha</h6>
-        
+
         <div class="d-flex gap-2 mb-2">
-          <button class="btn-context flex-fill" [class.active]="listenContextDevice === 'Auriculares'" (click)="listenContextDevice = 'Auriculares'">
+          <button class="btn-context flex-fill" [class.active]="listenContextDevice === 'Auriculares'"
+            (click)="listenContextDevice = 'Auriculares'">
             <i class="fa-solid fa-headphones d-block mb-1 fs-5"></i>
             Auriculares
           </button>
-          <button class="btn-context flex-fill" [class.active]="listenContextDevice === 'Altavoces'" (click)="listenContextDevice = 'Altavoces'">
+          <button class="btn-context flex-fill" [class.active]="listenContextDevice === 'Altavoces'"
+            (click)="listenContextDevice = 'Altavoces'">
             <i class="fa-solid fa-speaker-deck d-block mb-1 fs-5"></i>
             Altavoces
           </button>
-          <button class="btn-context flex-fill" [class.active]="listenContextDevice === 'Coche'" (click)="listenContextDevice = 'Coche'">
+          <button class="btn-context flex-fill" [class.active]="listenContextDevice === 'Coche'"
+            (click)="listenContextDevice = 'Coche'">
             <i class="fa-solid fa-car d-block mb-1 fs-5"></i>
             Coche
           </button>
         </div>
 
         <div class="d-flex gap-2">
-          <button class="btn-context flex-fill py-2" [class.active]="listenContextTime === 'Día'" (click)="listenContextTime = 'Día'">
+          <button class="btn-context flex-fill py-2" [class.active]="listenContextTime === 'Día'"
+            (click)="listenContextTime = 'Día'">
             <i class="fa-regular fa-sun fs-6 me-2"></i> Día
           </button>
-          <button class="btn-context flex-fill py-2" [class.active]="listenContextTime === 'Noche'" (click)="listenContextTime = 'Noche'">
+          <button class="btn-context flex-fill py-2" [class.active]="listenContextTime === 'Noche'"
+            (click)="listenContextTime = 'Noche'">
             <i class="fa-solid fa-moon fs-6 me-2 text-secondary"></i> Noche
           </button>
         </div>
@@ -192,53 +204,61 @@
         <div class="mb-4">
           <div class="survey-question mb-3 text-center">¿Te gustaron las letras?</div>
           <div class="d-flex gap-2 justify-content-center">
-            <button class="btn btn-survey border-secondary" [class.active]="lyricsLiked === true" (click)="setLyrics(true)">SI</button>
-            <button class="btn btn-survey border-secondary" [class.active-no]="lyricsLiked === false" (click)="setLyrics(false)">NO</button>
+            <button class="btn btn-survey border-secondary" [class.active]="lyricsLiked === true"
+              (click)="setLyrics(true)">SI</button>
+            <button class="btn btn-survey border-secondary" [class.active-no]="lyricsLiked === false"
+              (click)="setLyrics(false)">NO</button>
           </div>
         </div>
 
         <div class="mb-4">
           <div class="survey-question mb-3 text-center">¿Lo escucharías de nuevo?</div>
           <div class="d-flex gap-2 justify-content-center">
-            <button class="btn btn-survey border-secondary" [class.active]="listenAgain === true" (click)="setListenAgain(true)">SI</button>
-            <button class="btn btn-survey border-secondary" [class.active-no]="listenAgain === false" (click)="setListenAgain(false)">NO</button>
+            <button class="btn btn-survey border-secondary" [class.active]="listenAgain === true"
+              (click)="setListenAgain(true)">SI</button>
+            <button class="btn btn-survey border-secondary" [class.active-no]="listenAgain === false"
+              (click)="setListenAgain(false)">NO</button>
           </div>
         </div>
 
         <div class="mb-5">
           <div class="survey-question mb-3 text-center">¿Lo recomendarías?</div>
           <div class="d-flex gap-2 justify-content-center">
-            <button class="btn btn-survey border-secondary" [class.active]="recommendSurvey === true" (click)="setRecommend(true)">SI</button>
-            <button class="btn btn-survey border-secondary" [class.active-no]="recommendSurvey === false" (click)="setRecommend(false)">NO</button>
+            <button class="btn btn-survey border-secondary" [class.active]="recommendSurvey === true"
+              (click)="setRecommend(true)">SI</button>
+            <button class="btn btn-survey border-secondary" [class.active-no]="recommendSurvey === false"
+              (click)="setRecommend(false)">NO</button>
           </div>
         </div>
 
         <!-- Slider de caras -->
-        <div class="position-relative pt-4 border-top border-secondary" style="border-color: rgba(255,255,255,0.05) !important;">
-           <div class="d-flex align-items-center w-100">
-             <i class="fa-regular fa-face-frown text-secondary fs-4 me-3"></i>
-             <input type="range" class="vibe-slider" min="0" max="100" [(ngModel)]="vibeFactor">
-             <i class="fa-regular fa-face-smile text-secondary fs-4 ms-3"></i>
-           </div>
-           <div class="d-flex justify-content-between text-secondary mt-2 px-1" style="font-size: 0.75rem;">
-             <span>No me gustó</span>
-             <span>Me encantó</span>
-           </div>
+        <div class="position-relative pt-4 border-top border-secondary"
+          style="border-color: rgba(255,255,255,0.05) !important;">
+          <div class="d-flex align-items-center w-100">
+            <i class="fa-regular fa-face-frown text-secondary fs-4 me-3"></i>
+            <input type="range" class="vibe-slider" min="0" max="100" [(ngModel)]="vibeFactor">
+            <i class="fa-regular fa-face-smile text-secondary fs-4 ms-3"></i>
+          </div>
+          <div class="d-flex justify-content-between text-secondary mt-2 px-1" style="font-size: 0.75rem;">
+            <span>No me gustó</span>
+            <span>Me encantó</span>
+          </div>
         </div>
       </div>
 
       <button class="btn-outline-preview mb-4" (click)="hidePreview = !hidePreview">
-        <i class="fa-solid" [ngClass]="hidePreview ? 'fa-eye' : 'fa-eye-slash'"></i> 
+        <i class="fa-solid" [ngClass]="hidePreview ? 'fa-eye' : 'fa-eye-slash'"></i>
         {{ hidePreview ? 'Mostrar' : 'Ocultar' }} vista previa
       </button>
 
       <!-- Vista Previa  -->
       <div class="secondary-card p-4 p-md-4 mb-4" *ngIf="!hidePreview">
         <h6 class="box-title mb-4">VISTA PREVIA</h6>
-        
+
         <div class="d-flex gap-3 align-items-start mb-4">
-          <div class="rounded overflow-hidden shadow bg-dark" style="width: 80px; height: 80px; border: 2px solid #fff; flex-shrink: 0;">
-             <img [src]="album?.image" class="w-100 h-100 object-fit-cover" alt="Portada mini">
+          <div class="rounded overflow-hidden shadow bg-dark"
+            style="width: 80px; height: 80px; border: 2px solid #fff; flex-shrink: 0;">
+            <img [src]="album?.image" class="w-100 h-100 object-fit-cover" alt="Portada mini">
           </div>
           <div>
             <h5 class="text-white fw-bold mb-1 m-0 text-truncate" style="max-width: 250px;">{{ displayTitle }}</h5>
@@ -254,20 +274,24 @@
         </div>
 
         <div class="text-white opacity-75" style="font-size: 0.9rem; line-height: 1.5;">
-           {{ text.length > 0 ? (text | slice:0:100) + (text.length > 100 ? '...' : '')  : 'Escribe algo para ver la vista previa...' }}
+          {{ text.length > 0 ? (text | slice:0:100) + (text.length > 100 ? '...' : '') : 'Escribe algo para ver la vista
+          previa...' }}
         </div>
 
         <div class="d-flex flex-wrap gap-2 mt-4" *ngIf="selectedTags.length > 0">
-           <div class="badge rounded-pill" style="background-color: rgba(245, 41, 61, 0.2); color: var(--accent-red); font-weight: 600; font-size: 0.70rem; padding: 0.35rem 0.6rem;" *ngFor="let mtag of selectedTags">
-             {{ mtag }}
-           </div>
+          <div class="badge rounded-pill"
+            style="background-color: rgba(245, 41, 61, 0.2); color: var(--accent-red); font-weight: 600; font-size: 0.70rem; padding: 0.35rem 0.6rem;"
+            *ngFor="let mtag of selectedTags">
+            {{ mtag }}
+          </div>
         </div>
       </div>
 
       <!-- Feedback y Botón de guardado FINAL -->
       <div class="alert alert-danger py-2 mb-3" *ngIf="saveError">{{ saveError }}</div>
       <div class="alert alert-success py-2 mb-3" *ngIf="saveSuccess">¡Reseña publicada! Redirigiendo...</div>
-      <button class="btn btn-red-neon w-100 py-3 fs-6 shadow-lg mb-4 mt-2" (click)="saveReview()" [disabled]="isSaving || saveSuccess">
+      <button class="btn btn-red-neon w-100 py-3 fs-6 shadow-lg mb-4 mt-2" (click)="saveReview()"
+        [disabled]="isSaving || saveSuccess">
         <span *ngIf="!isSaving && !saveSuccess">PUBLICAR RESEÑA</span>
         <span *ngIf="isSaving"><i class="fa-solid fa-spinner fa-spin me-2"></i>Guardando...</span>
         <span *ngIf="saveSuccess"><i class="fa-solid fa-check me-2"></i>¡Publicada!</span>

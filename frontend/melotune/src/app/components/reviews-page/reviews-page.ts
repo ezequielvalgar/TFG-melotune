@@ -36,7 +36,6 @@ export class ReviewsPageComponent implements OnInit {
     'Singles potentes', 'Para la noche'
   ];
 
-  fallbackReviews: any[] = [];
 
   ngOnInit() {
     this.loadReviews();
@@ -144,12 +143,6 @@ export class ReviewsPageComponent implements OnInit {
     this.viewMode = mode;
   }
 
-  toggleLike(index: number, event: Event) {
-    event.preventDefault(); // Por si el like está en un ancla
-    // Ojo, mutar filteredReviews altera indices, pero no lo estamos pasando como arg, hay que buscar la reseña original.
-    // Asumiremos interactuar sobre this.reviews o mejor pasamos el item directo si lo hacemos dinámico.
-    // Lo más seguro es pasar la referencia del objeto directo.
-  }
 
   toggleLikeDirect(review: any, event: Event) {
     event.preventDefault();

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FriendsService } from '../../services/friends.service';
 import { AuthService } from '../../services/auth.service';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
     selector: 'app-friends-page',
@@ -13,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class FriendsPageComponent implements OnInit {
     private friendsService = inject(FriendsService);
+    private reviewService = inject(ReviewService);
     private authService = inject(AuthService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
@@ -84,5 +86,28 @@ export class FriendsPageComponent implements OnInit {
         const full = Math.floor(rating || 0);
         const half = this.hasHalfStar(rating) ? 1 : 0;
         return Array(Math.max(0, 5 - full - half)).fill(0);
+    }
+
+    onToggleLike(review: any) {
+        if (!this.authService.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return;
+        }
+        const wasLiked = review.likedByUser;
+        review.likedByUser = !wasLiked;
+        review.likes = (review.likes || 0) + (wasLiked ? -1 : 1);
+
+        this.reviewService.toggleLike(review.id).subscribe({
+            next: (res: any) => {
+                review.likedByUser = res.liked;
+                review.likes = res.likes;
+                this.cdr.detectChanges();
+            },
+            error: () => {
+                review.likedByUser = wasLiked;
+                review.likes = (review.likes || 0) + (wasLiked ? 1 : -1);
+                this.cdr.detectChanges();
+            }
+        });
     }
 }

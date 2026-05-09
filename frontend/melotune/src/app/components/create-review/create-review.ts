@@ -24,46 +24,55 @@ export class CreateReviewComponent implements OnInit {
   saveSuccess = false;
   saveError = '';
 
-  // Datos del álbum (inyectados por el buscador)
   album: any = null;
 
-  // Formulario de Texto
   title: string = '';
   text: string = '';
 
-  // Etiquetas
   availableTags = [
-    'Producción increíble', 'Letras profundas', 'Para llorar', 'Buenas vibras', 
-    'Obra maestra', 'Experimental', 'Nostálgico', 'Bailable', 'Relajante', 'Energético'
+    // Calidad y producción
+    'Obra maestra', 'Producción impecable', 'Producción minimalista',
+    'Muy producido', 'Lo-fi', 'Experimental',
+    // Emoción y estado de ánimo
+    'Emotivo', 'Eufórico', 'Melancólico', 'Nostálgico', 'Oscuro',
+    'Relajante', 'Enérgico', 'Romántico', 'Angustioso',
+    // Escucha
+    'Para auriculares', 'Para la noche', 'Para el coche',
+    'Para estudiar', 'Para entrenar', 'Bailable', 'Para llorar',
+    // Estructura y formato
+    'Álbum conceptual', 'Singles potentes', 'Mejor en orden',
+    'Intro y outro perfectos', 'Sin relleno', 'Demasiado largo',
+    // Impacto
+    'Cambia con el tiempo', 'Amor a primera escucha',
+    'Infravalorado', 'Sobrevalorado', 'Obra de culto',
+    // Letras
+    'Letras profundas', 'Letras poéticas', 'Sin letras destacables',
+    'Storytelling', 'Letras cotidianas',
   ];
   selectedTags: string[] = [];
 
-  // Preguntas Guía
-  qFavSong: string = '';
   qEmotions: string = '';
   qRecommend: string = '';
 
-  // Canciones Puntuables (Accordion)
-  trackRatings: any[] = [];
-  showTracks: boolean = true;
+  selectedFavoriteSong = '';
+  favoriteSongText = '';
 
-  // Interacción General (Estrellas del Álbum)
+  evolucion: '' | 'crece' | 'inmediato' = '';
+  primeraMention = '';
+
   rating: number = 0;
   hoverRating: number = 0;
   isAlbumFavorite: boolean = false;
   isAlbumSaved: boolean = false;
-  
-  // Contextos y Escuchas
-  listenContextDevice: string = 'Altavoces'; // Auriculares | Altavoces | Coche
-  listenContextTime: string = 'Día';         // Día | Noche
 
-  // Encuesta
+  listenContextDevice: string = 'Altavoces';
+  listenContextTime: string = 'Día';
+
   lyricsLiked: boolean | null = null;
   listenAgain: boolean | null = null;
   recommendSurvey: boolean | null = null;
-  vibeFactor: number = 50; // Slider de caras 0 a 100
-  
-  // Vista Previa
+  vibeFactor: number = 50;
+
   hidePreview: boolean = false;
 
   constructor() {
@@ -75,58 +84,30 @@ export class CreateReviewComponent implements OnInit {
 
   ngOnInit() {
     if (!this.album) {
-      this.album = {
-        name: 'Blonde',
-        artist: 'Frank Ocean',
-        image: 'https://lastfm.freetls.fastly.net/i/u/300x300/aae3b99eb4e3415c898c117b9b1ac00e.png',
-        year: '2016'
-      };
-    } else {
-      this.album.year = 'Buscando...';
-      
-      this.musicService.getAlbumDetails(this.album.artist, this.album.name).subscribe({
-        next: (details: any) => {
-          this.album.year = details.year || 'Desc.';
-          
-          // Construir array de puntuación de canciones
-          if (details.tracks && details.tracks.length > 0) {
-            this.trackRatings = details.tracks.map((t: any) => ({
-              name: t.name,
-              rating: 0,
-              hoverRating: 0,
-              favorite: false
-            }));
-          } else {
-             // Mockup tracks if Last.fm fails to deliver
-             this.trackRatings = [
-                {name: 'Nikes', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Ivy', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Pink + White', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Be Yourself', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Solo', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Skyline To', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Self Control', rating: 0, hoverRating: 0, favorite: false},
-                {name: 'Good Guy', rating: 0, hoverRating: 0, favorite: false}
-             ];
-          }
-
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.album.year = '2024';
-          // Mockup tracks if fail
-          this.trackRatings = [
-             {name: 'Track 1', rating: 0, hoverRating: 0, favorite: false},
-             {name: 'Track 2', rating: 0, hoverRating: 0, favorite: false},
-             {name: 'Track 3', rating: 0, hoverRating: 0, favorite: false}
-          ];
-          this.cdr.detectChanges();
-        }
-      });
+      this.router.navigate(['/']);
+      return;
     }
+    
+    this.album.year = 'Buscando...';
+
+    this.musicService.getAlbumDetails(this.album.artist, this.album.name).subscribe({
+      next: (details: any) => {
+        this.album.year = details.year || 'Desc.';
+        this.album.tracks = details.tracks || [];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.album.year = '2024';
+        this.album.tracks = [];
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  // Lógica de Etiquetas
+  get hasTracks(): boolean {
+    return this.album?.tracks && this.album.tracks.length > 0;
+  }
+
   toggleTag(tag: string) {
     const idx = this.selectedTags.indexOf(tag);
     if (idx > -1) {
@@ -138,13 +119,12 @@ export class CreateReviewComponent implements OnInit {
     }
   }
 
-  // Progreso general
   get progress(): number {
     let score = 0;
     if (this.title.length > 0) score += 10;
     if (this.text.length > 20) score += 20;
     if (this.selectedTags.length > 0) score += 10;
-    if (this.qFavSong.length > 0) score += 5;
+    if (this.selectedFavoriteSong.length > 0 || this.favoriteSongText.length > 0) score += 5;
     if (this.qEmotions.length > 0) score += 5;
     if (this.qRecommend.length > 0) score += 5;
     if (this.rating > 0) score += 15;
@@ -154,23 +134,14 @@ export class CreateReviewComponent implements OnInit {
     return Math.min(score, 100);
   }
 
-  // Título dinámico para la preview
   get displayTitle(): string {
     return this.title.trim().length > 0 ? this.title : 'Sin título';
   }
 
-  // Rating Álbum General
   setRating(val: number) { this.rating = val; }
   setHoverRating(val: number) { this.hoverRating = val; }
   clearHover() { this.hoverRating = 0; }
-  
-  // Track Ratings
-  setTrackRating(index: number, val: number) { this.trackRatings[index].rating = val; }
-  setTrackHover(index: number, val: number) { this.trackRatings[index].hoverRating = val; }
-  clearTrackHover(index: number) { this.trackRatings[index].hoverRating = 0; }
-  toggleTrackFav(index: number) { this.trackRatings[index].favorite = !this.trackRatings[index].favorite; }
 
-  // Encuesta
   setLyrics(val: boolean) { this.lyricsLiked = val; }
   setListenAgain(val: boolean) { this.listenAgain = val; }
   setRecommend(val: boolean) { this.recommendSurvey = val; }
@@ -198,7 +169,6 @@ export class CreateReviewComponent implements OnInit {
       contenido:      this.text,
       etiquetas:      this.selectedTags,
       preguntas_guia: {
-        favSong:   this.qFavSong,
         emotions:  this.qEmotions,
         recommend: this.qRecommend
       },
@@ -209,28 +179,28 @@ export class CreateReviewComponent implements OnInit {
         vibeFactor:    this.vibeFactor
       },
       contexto_escucha: `${this.listenContextDevice} / ${this.listenContextTime}`,
-      cancion_favorita: this.qFavSong,
-      vibe_factor:     this.vibeFactor
+      cancion_favorita: this.hasTracks ? this.selectedFavoriteSong : this.favoriteSongText,
+      vibe_factor:     this.vibeFactor,
+      evolucion:       this.evolucion || null,
+      primera_mencion: this.primeraMention || null,
     };
 
     this.reviewService.createReview(payload).subscribe({
       next: () => {
-        // 1. Si el usuario marcó "Guardar", lo mandamos a la tabla de guardados
         if (this.isAlbumSaved) {
           this.reviewService.toggleSaveAlbum({
             title: this.album?.name,
             artist: this.album?.artist,
             image: this.album?.image
-          }).subscribe(() => { /* Guardado silencioso */ });
+          }).subscribe(() => { });
         }
 
-        // 2. Si el usuario marcó "Favorito", lo mandamos a la tabla de favoritos
         if (this.isAlbumFavorite) {
           this.reviewService.toggleFavoriteAlbum({
             title: this.album?.name,
             artist: this.album?.artist,
             image: this.album?.image
-          }).subscribe(() => { /* Favorito silencioso */ });
+          }).subscribe(() => { });
         }
 
         this.isSaving = false;

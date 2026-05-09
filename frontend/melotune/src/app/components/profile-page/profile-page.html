@@ -1,18 +1,18 @@
 <div class="container py-5 mt-2">
 
   <!-- Back link -->
-  <a routerLink="/" class="d-flex align-items-center text-secondary text-decoration-none mb-4" style="font-size: 0.9rem;">
+  <a routerLink="/" class="d-flex align-items-center text-secondary text-decoration-none mb-4"
+    style="font-size: 0.9rem;">
     <i class="fa-solid fa-arrow-left me-2"></i> Inicio
   </a>
 
   <!-- Cabecera del Perfil (Modo Lectura) -->
   <div class="profile-header d-flex flex-column flex-md-row gap-4 align-items-start mb-4" *ngIf="!isEditingProfile">
-    
+
     <!-- Avatar -->
     <div class="position-relative flex-shrink-0">
-      <img [src]="user?.foto_perfil || avatarPreviewUrl"
-           class="profile-avatar" alt="Avatar"
-           (error)="onAvatarError($event)">
+      <img [src]="user?.foto_perfil || avatarPreviewUrl" class="profile-avatar" alt="Avatar"
+        (error)="onAvatarError($event)">
       <button *ngIf="isOwnProfile" class="profile-edit-btn" title="Editar foto" (click)="toggleEditProfile()">
         <i class="fa-solid fa-pen" style="font-size: 0.7rem;"></i>
       </button>
@@ -23,12 +23,14 @@
       <div class="d-flex justify-content-between align-items-center mb-1">
         <h1 class="text-white fw-black mb-0" style="font-size: 2rem;">{{ user?.nombre || 'Nuevo Usuario' }}</h1>
         <div class="d-flex gap-2">
-           <button *ngIf="isOwnProfile" class="btn btn-outline-light btn-sm rounded-pill px-3" (click)="toggleEditProfile()">Editar Perfil</button>
-           <app-follow-button *ngIf="!isOwnProfile" [userId]="profileUserId!" (followChanged)="onFollowChanged($event)"></app-follow-button>
+          <button *ngIf="isOwnProfile" class="btn btn-outline-light btn-sm rounded-pill px-3"
+            (click)="toggleEditProfile()">Editar Perfil</button>
+          <app-follow-button *ngIf="!isOwnProfile" [userId]="profileUserId!"
+            (followChanged)="onFollowChanged($event)"></app-follow-button>
         </div>
       </div>
       <div class="text-secondary mb-3" style="font-size: 0.9rem;">&#64;{{ user?.username }}</div>
-      
+
       <p class="text-secondary mb-3" style="font-size: 0.9rem; max-width: 520px; line-height: 1.6;">
         {{ user?.bio || 'Sin biografía aún. ¡Cuéntanos algo sobre ti!' }}
       </p>
@@ -60,12 +62,13 @@
 
   <!-- Cabecera del Perfil (Modo Edición) -->
   <div class="profile-header d-flex flex-column flex-md-row gap-4 align-items-start mb-4" *ngIf="isEditingProfile">
-    
+
     <!-- Avatar Edición -->
-    <div class="position-relative flex-shrink-0" style="cursor: pointer;" (click)="triggerFileInput()" title="Click para cambiar foto">
-      <img [src]="avatarPreviewUrl || (currentUser$ | async)?.foto_perfil" 
-           class="profile-avatar border border-2 border-primary" alt="Avatar Edit" style="opacity: 0.8;"
-           (error)="onAvatarError($event)">
+    <div class="position-relative flex-shrink-0" style="cursor: pointer;" (click)="triggerFileInput()"
+      title="Click para cambiar foto">
+      <img [src]="avatarPreviewUrl || (currentUser$ | async)?.foto_perfil"
+        class="profile-avatar border border-2 border-primary" alt="Avatar Edit" style="opacity: 0.8;"
+        (error)="onAvatarError($event)">
       <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
         <i class="fa-solid fa-camera fs-3 drop-shadow"></i>
       </div>
@@ -77,27 +80,29 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="text-white fw-bold mb-0">Editar Perfil</h3>
       </div>
-      
+
       <div class="mb-3" style="max-width: 520px;">
         <label class="form-label text-secondary" style="font-size: 0.85rem;">Nombre Visible</label>
-        <input type="text" class="form-control form-control-dark bg-dark text-white border-secondary border-opacity-25" 
-               [(ngModel)]="editNombre" maxlength="50" placeholder="Escribe tu nombre visible">
+        <input type="text" class="form-control form-control-dark bg-dark text-white border-secondary border-opacity-25"
+          [(ngModel)]="editNombre" maxlength="50" placeholder="Escribe tu nombre visible">
       </div>
 
       <div class="mb-4" style="max-width: 520px;">
         <label class="form-label text-secondary" style="font-size: 0.85rem;">Biografía</label>
-        <textarea class="form-control form-control-dark bg-dark text-white border-secondary border-opacity-25" 
-                  [(ngModel)]="editBio" rows="3" maxlength="500" placeholder="Escribe algo sobre ti..."></textarea>
+        <textarea class="form-control form-control-dark bg-dark text-white border-secondary border-opacity-25"
+          [(ngModel)]="editBio" rows="3" maxlength="500" placeholder="Escribe algo sobre ti..."></textarea>
         <div class="text-end text-secondary mt-1" style="font-size: 0.75rem;">{{ editBio.length }}/500</div>
       </div>
 
       <!-- Botones de Acción -->
       <div class="d-flex gap-3">
-        <button class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="saveProfile()" [disabled]="isSavingProfile">
+        <button class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="saveProfile()"
+          [disabled]="isSavingProfile">
           <span *ngIf="!isSavingProfile">Guardar Cambios</span>
           <span *ngIf="isSavingProfile"><i class="fa-solid fa-spinner fa-spin me-2"></i> Guardando...</span>
         </button>
-        <button class="btn btn-outline-secondary px-4 fw-bold rounded-pill" (click)="cancelEdit()" [disabled]="isSavingProfile">
+        <button class="btn btn-outline-secondary px-4 fw-bold rounded-pill" (click)="cancelEdit()"
+          [disabled]="isSavingProfile">
           Cancelar
         </button>
       </div>
@@ -136,12 +141,13 @@
     </div>
 
     <div class="d-flex flex-column gap-4">
-      <div class="review-card p-4 rounded-4" *ngFor="let review of userReviews" style="background-color: var(--card-bg); border: 1px solid var(--card-border);">
+      <div class="review-card p-4 rounded-4" *ngFor="let review of userReviews"
+        style="background-color: var(--card-bg); border: 1px solid var(--card-border);">
         <div class="d-flex flex-column flex-md-row">
           <!-- Portada -->
-          <a [routerLink]="['/album', review.artist, review.albumTitle]" class="rounded overflow-hidden me-md-4 mb-3 mb-md-0 flex-shrink-0 bg-dark text-decoration-none d-block"
-               [style.width.px]="viewMode === 'large' ? 180 : 110"
-               [style.height.px]="viewMode === 'large' ? 180 : 110">
+          <a [routerLink]="['/album', review.artist, review.albumTitle]"
+            class="rounded overflow-hidden me-md-4 mb-3 mb-md-0 flex-shrink-0 bg-dark text-decoration-none d-block"
+            [style.width.px]="viewMode === 'large' ? 180 : 110" [style.height.px]="viewMode === 'large' ? 180 : 110">
             <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" [alt]="review.albumTitle">
           </a>
 
@@ -158,7 +164,8 @@
                   <a [routerLink]="['/profile', review.userId]" class="text-decoration-none">
                     <img [src]="review.userAvatar" class="rounded-circle me-2" style="width: 18px; height: 18px;">
                   </a>
-                  <a [routerLink]="['/profile', review.userId]" class="text-white fw-bold text-decoration-none">{{ review.username }}</a>
+                  <a [routerLink]="['/profile', review.userId]" class="text-white fw-bold text-decoration-none">{{
+                    review.username }}</a>
                   <span class="text-secondary mx-2">•</span>
                   <span class="text-secondary">{{ review.date }}</span>
                 </div>
@@ -191,34 +198,25 @@
             <!-- Canción Favorita -->
             <div class="d-flex align-items-center mb-2" style="font-size: 0.85rem;">
               <i class="fa-solid fa-music text-accent-red me-2"></i>
-              <span class="text-secondary">Favorita: <strong class="text-white">{{ review.favoriteSong }}</strong></span>
+              <span class="text-secondary">Favorita: <strong class="text-white">{{ review.favoriteSong
+                  }}</strong></span>
             </div>
 
             <!-- Escuchas -->
             <div class="text-secondary mb-3" style="font-size: 0.82rem;">
-              <i class="fa-solid fa-headphones me-1"></i> {{ review.listenCount }} escuchas antes de escribir esta reseña
+              <i class="fa-solid fa-headphones me-1"></i> {{ review.listenCount }} escuchas antes de escribir esta
+              reseña
             </div>
 
             <!-- Interacciones -->
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex gap-4 align-items-center">
+            <div class="d-flex align-items-center mt-2">
                 <button class="btn btn-link p-0 text-decoration-none like-btn"
                         [style.color]="review.likedByUser ? 'var(--accent-red)' : 'var(--text-secondary)'"
                         (click)="onToggleLike(review)"
                         style="font-size: 0.9rem;">
-                  <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-1 fs-6"></i>
-                  {{ review.likes }}
+                    <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-1 fs-6"></i>
+                    {{ review.likes }}
                 </button>
-                <span class="text-secondary" style="font-size: 0.9rem;">
-                  <i class="fa-regular fa-comment fs-6 me-1"></i> {{ review.comments }}
-                </span>
-                <span class="text-secondary" style="font-size: 0.9rem; cursor: pointer;">
-                  <i class="fa-regular fa-bookmark fs-6"></i>
-                </span>
-              </div>
-              <span class="text-secondary" style="font-size: 0.85rem; cursor: pointer;">
-                Ver menos <i class="fa-solid fa-chevron-up ms-1" style="font-size: 0.7rem;"></i>
-              </span>
             </div>
           </div>
         </div>
@@ -229,6 +227,32 @@
 
   <!-- ===== TAB: FAVORITOS ===== -->
   <div id="favoritos" *ngIf="activeTab === 'favoritos'">
+
+    <!-- Artistas Favoritos -->
+    <div class="mb-5">
+      <h5 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
+        <i class="fa-solid fa-microphone text-accent-red"></i> Artistas Favoritos
+      </h5>
+      <div class="albums-grid" *ngIf="favoriteArtists.length > 0">
+        <div class="album-grid-item" *ngFor="let artist of favoriteArtists">
+          <a [routerLink]="['/artist', artist.artist_nombre]" class="text-decoration-none">
+            <div class="album-grid-cover rounded-circle overflow-hidden">
+              <img [src]="artist.artist_imagen || 'https://placehold.co/300/222436/60658a?text=Artist'"
+                class="w-100 h-100 object-fit-cover" [alt]="artist.artist_nombre">
+            </div>
+            <div class="mt-2 text-center">
+              <div class="text-white fw-semibold text-truncate" style="font-size:0.85rem;">
+                {{ artist.artist_nombre }}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div *ngIf="favoriteArtists.length === 0" class="text-secondary" style="font-size: 0.9rem;">
+        Aún no tienes artistas favoritos.
+      </div>
+    </div>
+
     <!-- Albums Favoritos -->
     <div class="mb-5">
       <h5 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
@@ -297,10 +321,12 @@
     <div>
       <h5 class="text-white fw-bold mb-4">Actividad Reciente</h5>
       <div class="d-flex flex-column gap-3">
-        <a [routerLink]="['/album', item.artist, item.albumTitle]" class="activity-row d-flex align-items-center gap-3 p-3 rounded-3 text-decoration-none"
-             *ngFor="let item of activityFeed"
-             style="background-color: var(--card-bg); border: 1px solid var(--card-border);">
-          <img [src]="item.image" [alt]="item.albumTitle" class="rounded" style="width: 48px; height: 48px; object-fit: cover; flex-shrink:0;">
+        <a [routerLink]="['/album', item.artist, item.albumTitle]"
+          class="activity-row d-flex align-items-center gap-3 p-3 rounded-3 text-decoration-none"
+          *ngFor="let item of activityFeed"
+          style="background-color: var(--card-bg); border: 1px solid var(--card-border);">
+          <img [src]="item.image" [alt]="item.albumTitle" class="rounded"
+            style="width: 48px; height: 48px; object-fit: cover; flex-shrink:0;">
           <div class="flex-grow-1">
             <div class="text-accent-red" style="font-size: 0.75rem; font-weight: 700;">
               <i class="fa-regular fa-clock me-1"></i> {{ item.type }}
@@ -345,14 +371,15 @@
             <i class="fa-solid fa-star text-warning-custom me-1" style="font-size: 0.8rem;"></i>
             <span class="text-white fw-bold" style="font-size: 0.9rem;">{{ row.stars }}</span>
           </div>
-          <div class="flex-grow-1" style="height: 12px; background-color: rgba(255,255,255,0.05); border-radius: 50px; overflow: hidden;">
-            <div class="h-100 rounded-pill"
-                 [style.width.%]="row.percent"
-                 [style.background-color]="row.percent > 0 ? 'var(--accent-red)' : 'transparent'"
-                 style="transition: width 0.8s ease;">
+          <div class="flex-grow-1"
+            style="height: 12px; background-color: rgba(255,255,255,0.05); border-radius: 50px; overflow: hidden;">
+            <div class="h-100 rounded-pill" [style.width.%]="row.percent"
+              [style.background-color]="row.percent > 0 ? 'var(--accent-red)' : 'transparent'"
+              style="transition: width 0.8s ease;">
             </div>
           </div>
-          <span class="text-secondary" style="width: 24px; text-align: right; font-size: 0.85rem;">{{ row.count }}</span>
+          <span class="text-secondary" style="width: 24px; text-align: right; font-size: 0.85rem;">{{ row.count
+            }}</span>
         </div>
       </div>
     </div>
@@ -361,8 +388,7 @@
     <div class="section-card">
       <h5 class="text-white fw-bold mb-4">Géneros Más Escuchados</h5>
       <div class="d-flex flex-wrap gap-3">
-        <div class="genre-pill" *ngFor="let genre of topGenres; let i = index"
-             [class.genre-pill-active]="i === 0">
+        <div class="genre-pill" *ngFor="let genre of topGenres; let i = index" [class.genre-pill-active]="i === 0">
           {{ genre }}
         </div>
       </div>
@@ -371,66 +397,57 @@
 
 </div>
 
-  <!-- Modal seguidores/seguidos -->
-  <div class="modal-backdrop-custom" *ngIf="showFollowModal" (click)="closeFollowModal()">
-    <div class="modal-custom mt-card p-4" (click)="$event.stopPropagation()">
+<!-- Modal seguidores/seguidos -->
+<div class="modal-backdrop-custom" *ngIf="showFollowModal" (click)="closeFollowModal()">
+  <div class="modal-custom mt-card p-4" (click)="$event.stopPropagation()">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">
-                {{ followModalType === 'followers' ? 'Seguidores' : 'Siguiendo' }}
-            </h5>
-            <button class="btn-close btn-close-white" (click)="closeFollowModal()"></button>
-        </div>
-
-        <!-- Skeleton loader -->
-        <div *ngIf="isLoadingModal">
-            <div *ngFor="let s of [1,2,3,4,5]"
-                 class="d-flex align-items-center gap-3 mb-3">
-                <div class="skeleton-pulse rounded-circle" style="width:42px;height:42px;flex-shrink:0;"></div>
-                <div class="flex-grow-1">
-                    <div class="skeleton-pulse rounded mb-1" style="height:13px;width:60%;"></div>
-                    <div class="skeleton-pulse rounded" style="height:11px;width:40%;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lista de usuarios -->
-        <div *ngIf="!isLoadingModal">
-            <div *ngIf="followModalUsers.length === 0" class="text-secondary text-center py-3">
-                {{ followModalType === 'followers' ? 'No tiene seguidores todavía.' : 'No sigue a nadie todavía.' }}
-            </div>
-            <div *ngFor="let user of followModalUsers"
-                 class="d-flex align-items-center gap-3 mb-3">
-                <a [routerLink]="['/profile', user.id]"
-                   (click)="closeFollowModal()"
-                   class="text-decoration-none d-flex align-items-center gap-3 flex-grow-1">
-                    <img [src]="user.foto_perfil || 'https://ui-avatars.com/api/?name=' + user.username + '&background=1a1c2e&color=E83E8C&size=200&bold=true'"
-                         class="rounded-circle"
-                         style="width:42px;height:42px;object-fit:cover;flex-shrink:0;"
-                         [alt]="user.username">
-                    <div class="overflow-hidden">
-                        <p class="mb-0 fw-bold text-white text-truncate" style="font-size:0.875rem;">
-                            {{ user.nombre }}
-                        </p>
-                        <p class="mb-0 text-secondary text-truncate" style="font-size:0.75rem;">
-                            @{{ user.username }}
-                        </p>
-                    </div>
-                </a>
-                <app-follow-button 
-                    *ngIf="authService.currentUserValue?.id !== user.id"
-                    [userId]="user.id"
-                    [followingLabel]="isOwnProfile ? 'Dejar de seguir' : 'Siguiendo'">
-                </app-follow-button>
-                <a *ngIf="authService.currentUserValue?.id === user.id"
-                   [routerLink]="['/profile']"
-                   class="btn btn-sm btn-outline-secondary rounded-pill px-3"
-                   style="font-size: 0.8rem;">
-                    Tu perfil
-                </a>
-            </div>
-        </div>
-
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="fw-bold mb-0">
+        {{ followModalType === 'followers' ? 'Seguidores' : 'Siguiendo' }}
+      </h5>
+      <button class="btn-close btn-close-white" (click)="closeFollowModal()"></button>
     </div>
-  </div>
 
+    <!-- Skeleton loader -->
+    <div *ngIf="isLoadingModal">
+      <div *ngFor="let s of [1,2,3,4,5]" class="d-flex align-items-center gap-3 mb-3">
+        <div class="skeleton-pulse rounded-circle" style="width:42px;height:42px;flex-shrink:0;"></div>
+        <div class="flex-grow-1">
+          <div class="skeleton-pulse rounded mb-1" style="height:13px;width:60%;"></div>
+          <div class="skeleton-pulse rounded" style="height:11px;width:40%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de usuarios -->
+    <div *ngIf="!isLoadingModal">
+      <div *ngIf="followModalUsers.length === 0" class="text-secondary text-center py-3">
+        {{ followModalType === 'followers' ? 'No tiene seguidores todavía.' : 'No sigue a nadie todavía.' }}
+      </div>
+      <div *ngFor="let user of followModalUsers" class="d-flex align-items-center gap-3 mb-3">
+        <a [routerLink]="['/profile', user.id]" (click)="closeFollowModal()"
+          class="text-decoration-none d-flex align-items-center gap-3 flex-grow-1">
+          <img
+            [src]="user.foto_perfil || 'https://ui-avatars.com/api/?name=' + user.username + '&background=1a1c2e&color=E83E8C&size=200&bold=true'"
+            class="rounded-circle" style="width:42px;height:42px;object-fit:cover;flex-shrink:0;" [alt]="user.username">
+          <div class="overflow-hidden">
+            <p class="mb-0 fw-bold text-white text-truncate" style="font-size:0.875rem;">
+              {{ user.nombre }}
+            </p>
+            <p class="mb-0 text-secondary text-truncate" style="font-size:0.75rem;">
+              @{{ user.username }}
+            </p>
+          </div>
+        </a>
+        <app-follow-button *ngIf="authService.currentUserValue?.id !== user.id" [userId]="user.id"
+          [followingLabel]="isOwnProfile ? 'Dejar de seguir' : 'Siguiendo'">
+        </app-follow-button>
+        <a *ngIf="authService.currentUserValue?.id === user.id" [routerLink]="['/profile']"
+          class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="font-size: 0.8rem;">
+          Tu perfil
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

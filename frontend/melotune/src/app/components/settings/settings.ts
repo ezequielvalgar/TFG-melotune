@@ -15,10 +15,6 @@ export class SettingsComponent implements OnInit {
   private themeService = inject(ThemeService);
 
   darkMode: boolean = true;
-  language: string = 'es';
-  emailNotifications: boolean = true;
-  newFollowerNotification: boolean = true;
-  newReviewNotification: boolean = true;
 
   toastVisible = false;
 
@@ -27,11 +23,7 @@ export class SettingsComponent implements OnInit {
     if (saved) {
       try {
         const prefs = JSON.parse(saved);
-        this.darkMode               = prefs.darkMode               ?? true;
-        this.language               = prefs.language               ?? 'es';
-        this.emailNotifications     = prefs.emailNotifications     ?? true;
-        this.newFollowerNotification = prefs.newFollowerNotification ?? true;
-        this.newReviewNotification  = prefs.newReviewNotification  ?? true;
+        this.darkMode = prefs.darkMode ?? true;
       } catch { /* localStorage corrupto, usa defaults */ }
     }
   }
@@ -44,11 +36,7 @@ export class SettingsComponent implements OnInit {
 
   saveSettings() {
     localStorage.setItem('melotune_settings', JSON.stringify({
-      darkMode:                this.darkMode,
-      language:                this.language,
-      emailNotifications:      this.emailNotifications,
-      newFollowerNotification: this.newFollowerNotification,
-      newReviewNotification:   this.newReviewNotification,
+      darkMode: this.darkMode
     }));
     this.showToast();
   }

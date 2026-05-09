@@ -13,17 +13,28 @@ class ReviewAlbum extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'usuario_id', 'album_id', 'calificacion', 'titulo', 'contenido',
-        'etiquetas', 'encuesta', 'preguntas_guia', 'contexto_escucha',
-        'cancion_favorita', 'vibe_factor', 'likes'
+        'usuario_id',
+        'album_id',
+        'calificacion',
+        'titulo',
+        'contenido',
+        'etiquetas',
+        'encuesta',
+        'preguntas_guia',
+        'contexto_escucha',
+        'cancion_favorita',
+        'vibe_factor',
+        'likes',
+        'evolucion',
+        'primera_mencion'
     ];
 
     protected $casts = [
-        'etiquetas'     => 'array',
-        'encuesta'      => 'array',
-        'preguntas_guia'=> 'array',
-        'calificacion'  => 'float',
-        'likes'         => 'integer',
+        'etiquetas' => 'array',
+        'encuesta' => 'array',
+        'preguntas_guia' => 'array',
+        'calificacion' => 'float',
+        'likes' => 'integer',
     ];
 
     public function usuario()

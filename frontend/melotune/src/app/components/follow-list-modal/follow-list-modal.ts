@@ -83,8 +83,7 @@ export class FollowListModalComponent implements OnInit {
         this.users = data;
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Error cargando usuarios', err);
+      error: () => {
         this.isLoading = false;
       }
     });

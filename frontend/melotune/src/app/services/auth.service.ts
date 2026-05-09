@@ -7,7 +7,7 @@ import { BehaviorSubject, tap, Observable, of } from 'rxjs';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'http://localhost:8000/api';
 
   // BehaviorSubject que mantiene el estado global del usuario logeado
   private currentUserSubject = new BehaviorSubject<any>(null);

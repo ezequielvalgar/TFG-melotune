@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user'])
 Route::get('/user/{userId}/stats', [\App\Http\Controllers\Api\UserStatsController::class, 'getStats']);
 Route::get('/user/{userId}/activity', [\App\Http\Controllers\Api\UserStatsController::class, 'getActivity']);
 Route::get('/user/{userId}/favorites', [\App\Http\Controllers\Api\UserStatsController::class, 'getFavorites']);
+Route::get('/user/{userId}/favorite-artists', [\App\Http\Controllers\Api\UserStatsController::class, 'getFavoriteArtists']);
 
 // Endpoints de Reseñas
 Route::get('/reviews', [ReviewController::class, 'index']);
@@ -60,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Favoritos
     Route::post('/user/favorites/toggle', [\App\Http\Controllers\Api\UserStatsController::class, 'toggleFavorite']);
+    Route::post('/user/favorite-artists/toggle', [\App\Http\Controllers\Api\UserStatsController::class, 'toggleFavoriteArtist']);
 });
 
 // Rutas de seguidores públicas

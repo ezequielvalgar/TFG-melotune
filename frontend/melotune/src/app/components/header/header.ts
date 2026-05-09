@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -10,13 +10,29 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './header.css',
   standalone: true
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
   // Observable que la vista suscribirá asíncronamente
   currentUser$ = this.authService.currentUser$;
   isDropdownOpen = false;
+  isDarkMode = true;
+
+  ngOnInit() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        this.isDarkMode = false;
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }
+
+  toggleTheme(): void {
+      this.isDarkMode = !this.isDarkMode;
+      const theme = this.isDarkMode ? 'dark' : 'light';
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', this.isDarkMode ? '' : 'light');
+  }
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;

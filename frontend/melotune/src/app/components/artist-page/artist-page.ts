@@ -66,9 +66,8 @@ export class ArtistPageComponent implements OnInit {
             return;
         }
         this.isTogglingFavoriteArtist = true;
-        this.reviewService.toggleFavoriteAlbum({
-            title: this.artist.name,
-            artist: this.artist.name,
+        this.reviewService.toggleFavoriteArtist({
+            name: this.artist.name,
             image: this.artist.image
         }).subscribe({
             next: (res: any) => {

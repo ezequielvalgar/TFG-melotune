@@ -41,12 +41,12 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         return response()->json([
-            'id'          => $user->id,
-            'username'    => $user->username,
-            'nombre'      => $user->nombre,
+            'id' => $user->id,
+            'username' => $user->username,
+            'nombre' => $user->nombre,
             'foto_perfil' => $user->foto_perfil,
-            'bio'         => $user->bio,
-            'created_at'  => $user->created_at,
+            'bio' => $user->bio,
+            'fecha_registro' => $user->fecha_registro,
             'followers_count' => $user->followersCount(),
             'following_count' => $user->followingCount(),
         ]);
@@ -58,7 +58,8 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::find($id);
-        if (!$user) return response()->json(['message' => 'Not found'], 404);
+        if (!$user)
+            return response()->json(['message' => 'Not found'], 404);
 
         $validated = $request->validate([
             'username' => 'string|max:50|unique:usuarios,username,' . $id,
@@ -80,7 +81,8 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::find($id);
-        if (!$user) return response()->json(['message' => 'Not found'], 404);
+        if (!$user)
+            return response()->json(['message' => 'Not found'], 404);
 
         $user->delete();
         return response()->json(null, 204);

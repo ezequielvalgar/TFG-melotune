@@ -1,11 +1,12 @@
 <div class="mb-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="section-title mb-0"><i class="fa-regular fa-star text-accent-red"></i> ÚLTIMAS RESEÑAS</h2>
-    <a [routerLink]="['/reviews']" class="link-see-all text-decoration-none">VER TODAS <i class="fa-solid fa-arrow-right"></i></a>
+    <a [routerLink]="['/reviews']" class="link-see-all text-decoration-none">VER TODAS <i
+        class="fa-solid fa-arrow-right"></i></a>
   </div>
 
   <div class="d-flex flex-column gap-4">
-    
+
     <!-- Skeleton Loader -->
     <ng-container *ngIf="isLoading">
       <div class="mt-card p-4" *ngFor="let s of [1,2,3,4,5]">
@@ -17,9 +18,9 @@
           </div>
         </div>
         <div>
-           <div class="skeleton-pulse rounded mb-2" style="height: 12px; width: 100%;"></div>
-           <div class="skeleton-pulse rounded mb-2" style="height: 12px; width: 100%;"></div>
-           <div class="skeleton-pulse rounded" style="height: 12px; width: 60%;"></div>
+          <div class="skeleton-pulse rounded mb-2" style="height: 12px; width: 100%;"></div>
+          <div class="skeleton-pulse rounded mb-2" style="height: 12px; width: 100%;"></div>
+          <div class="skeleton-pulse rounded" style="height: 12px; width: 60%;"></div>
         </div>
       </div>
     </ng-container>
@@ -28,23 +29,29 @@
     <ng-container *ngIf="!isLoading">
       <div class="mt-card p-4" *ngFor="let review of latestReviews">
         <div class="d-flex mb-3">
-          
+
           <!-- Album thumbnail -->
-          <a [routerLink]="['/album', review.artist, review.albumTitle]" class="rounded overflow-hidden me-3 flex-shrink-0" style="width: 80px; height: 80px; text-decoration: none;">
+          <a [routerLink]="['/album', review.artist, review.albumTitle]"
+            class="rounded overflow-hidden me-3 flex-shrink-0"
+            style="width: 80px; height: 80px; text-decoration: none;">
             <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" [alt]="review.albumTitle">
           </a>
-        
+
           <div class="flex-grow-1">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <div>
                 <a [routerLink]="['/album', review.artist, review.albumTitle]" class="text-decoration-none">
-                  <h6 class="fw-bold mb-0 text-white">{{ review.albumTitle }} <span class="text-secondary fw-normal"> — {{ review.artist }}</span></h6>
+                  <h6 class="fw-bold mb-0 text-white">{{ review.albumTitle }} <span class="text-secondary fw-normal"> —
+                      {{ review.artist }}</span></h6>
                 </a>
                 <div class="d-flex align-items-center mt-1">
-                <a [routerLink]="['/profile', review.userId]" class="text-decoration-none d-flex align-items-center mt-1">
-                  <img [src]="review.userAvatar" class="rounded-circle me-2 object-fit-cover" style="width: 20px; height: 20px; border: 1px solid rgba(255,255,255,0.1);" alt="Avatar">
-                  <span class="text-secondary" style="font-size: 0.8rem;">{{ review.username }} <span class="mx-1">•</span> {{ review.date }}</span>
-                </a>
+                  <a [routerLink]="['/profile', review.userId]"
+                    class="text-decoration-none d-flex align-items-center mt-1">
+                    <img [src]="review.userAvatar" class="rounded-circle me-2 object-fit-cover"
+                      style="width: 20px; height: 20px; border: 1px solid rgba(255,255,255,0.1);" alt="Avatar">
+                    <span class="text-secondary" style="font-size: 0.8rem;">{{ review.username }} <span
+                        class="mx-1">•</span> {{ review.date }}</span>
+                  </a>
                 </div>
               </div>
               <div class="text-warning-custom fs-6 d-flex align-items-center bg-dark bg-opacity-50 px-2 py-1 rounded">
@@ -62,11 +69,11 @@
 
             <h5 class="fw-bold text-white fs-6 mt-3 mb-2">{{ review.reviewTitle }}</h5>
             <p class="review-card-text mb-3" style="line-height: 1.6; font-size: 0.88rem;">{{ review.content }}</p>
-            
+
             <div class="d-flex align-items-center">
-              <button class="btn btn-link p-0 text-decoration-none d-flex align-items-center" 
-                      (click)="onToggleLike(review)"
-                      [style.color]="review.likedByUser ? 'var(--accent-red)' : 'var(--text-secondary)'">
+              <button class="btn btn-link p-0 text-decoration-none d-flex align-items-center"
+                (click)="onToggleLike(review)"
+                [style.color]="review.likedByUser ? 'var(--accent-red)' : 'var(--text-secondary)'">
                 <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-1"></i>
                 <span style="font-size: 0.85rem;">{{ review.likes || 0 }} likes</span>
               </button>

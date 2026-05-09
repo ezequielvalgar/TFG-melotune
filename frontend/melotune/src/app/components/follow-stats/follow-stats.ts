@@ -45,7 +45,7 @@ export class FollowStatsComponent implements OnInit {
   loadStats() {
     this.followerService.getStats(this.userId).subscribe({
       next: (data) => this.stats = data,
-      error: (err) => console.error('Error al cargar stats', err)
+      error: () => { }
     });
   }
 

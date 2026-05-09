@@ -32,62 +32,6 @@
     </div>
   </div>
 
-  <!-- Sección: Idioma -->
-  <div class="mt-card p-4 mb-4">
-    <h5 class="fw-bold mb-3">
-      <i class="fa-solid fa-globe text-accent-red me-2"></i>Idioma
-    </h5>
-    <select class="form-select bg-dark text-white border-secondary"
-            [(ngModel)]="language"
-            (change)="saveSettings()">
-      <option value="es">Español</option>
-      <option value="en">English</option>
-    </select>
-  </div>
-
-  <!-- Sección: Notificaciones -->
-  <div class="mt-card p-4 mb-4">
-    <h5 class="fw-bold mb-4">
-      <i class="fa-solid fa-bell text-accent-red me-2"></i>Notificaciones
-    </h5>
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <span class="text-white">Notificaciones por email</span>
-        <div class="text-secondary mt-1" style="font-size: 0.82rem;">Recibe resúmenes y novedades en tu correo</div>
-      </div>
-      <div class="form-check form-switch ms-3">
-        <input class="form-check-input" type="checkbox" id="toggleEmail"
-               [checked]="emailNotifications"
-               (change)="emailNotifications = !emailNotifications; saveSettings()">
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <span class="text-white">Nuevo seguidor</span>
-        <div class="text-secondary mt-1" style="font-size: 0.82rem;">Notificación cuando alguien te sigue</div>
-      </div>
-      <div class="form-check form-switch ms-3">
-        <input class="form-check-input" type="checkbox" id="toggleFollower"
-               [checked]="newFollowerNotification"
-               (change)="newFollowerNotification = !newFollowerNotification; saveSettings()">
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <span class="text-white">Nueva reseña en álbum favorito</span>
-        <div class="text-secondary mt-1" style="font-size: 0.82rem;">Aviso cuando alguien reseña un álbum que te gusta</div>
-      </div>
-      <div class="form-check form-switch ms-3">
-        <input class="form-check-input" type="checkbox" id="toggleReview"
-               [checked]="newReviewNotification"
-               (change)="newReviewNotification = !newReviewNotification; saveSettings()">
-      </div>
-    </div>
-  </div>
-
   <!-- Botón guardar -->
   <button class="btn btn-accent-red w-100 fw-bold py-3 mt-2" (click)="saveSettings()">
     <i class="fa-solid fa-floppy-disk me-2"></i>Guardar cambios

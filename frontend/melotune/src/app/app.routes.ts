@@ -10,7 +10,6 @@ import { NewReleasesComponent } from './components/new-releases/new-releases';
 import { AboutUsComponent } from './components/about-us/about-us';
 import { PrivacyComponent } from './components/privacy/privacy';
 import { CookiesComponent } from './components/cookies/cookies';
-import { SettingsComponent } from './components/settings/settings';
 import { ArtistPageComponent } from './components/artist-page/artist-page';
 import { FriendsPageComponent } from './components/friends-page/friends-page';
 
@@ -27,7 +26,6 @@ export const routes: Routes = [
   { path: 'about', component: AboutUsComponent },
   { path: 'privacidad', component: PrivacyComponent },
   { path: 'cookies', component: CookiesComponent },
-  { path: 'ajustes', component: SettingsComponent },
   { path: 'artist/:name', component: ArtistPageComponent },
   { path: 'friends', component: FriendsPageComponent }
 ];

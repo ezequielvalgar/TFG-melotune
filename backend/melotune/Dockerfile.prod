@@ -1,0 +1,19 @@
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y \
+    git curl zip unzip libpng-dev libonig-dev \
+    libxml2-dev libzip-dev libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath opcache intl
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+COPY . .
+
+RUN composer install --no-dev --no-interaction --optimize-autoloader
+RUN php artisan route:cache
+RUN php artisan view:cache
+
+RUN chmod -R 775 storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache

@@ -1,20 +1,21 @@
 <div class="container py-5 mt-4">
-  
+
   <!-- Cabecera y Controles -->
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-    
+
     <!-- Título -->
     <div class="d-flex flex-column">
-       <div class="d-flex align-items-center">
-         <i class="fa-regular fa-comment fs-3 text-accent-red me-3"></i>
-         <h2 class="fw-black text-white mb-0 text-uppercase" style="letter-spacing: 1px;">RESEÑAS</h2>
-       </div>
-       <div class="text-secondary mt-1 ps-5" style="font-size: 0.9rem;">{{ filteredReviews.length }} reseñas encontradas</div>
+      <div class="d-flex align-items-center">
+        <i class="fa-regular fa-comment fs-3 text-accent-red me-3"></i>
+        <h2 class="fw-black text-white mb-0 text-uppercase" style="letter-spacing: 1px;">RESEÑAS</h2>
+      </div>
+      <div class="text-secondary mt-1 ps-5" style="font-size: 0.9rem;">{{ filteredReviews.length }} reseñas encontradas
+      </div>
     </div>
 
     <!-- Controles Derecha -->
     <div class="d-flex align-items-center gap-2 gap-md-3 flex-wrap">
-      
+
       <!-- Ordenación -->
       <div class="d-flex gap-1 me-md-2">
         <button class="header-btn" [class.active]="sortBy === 'Recientes'" (click)="setSort('Recientes')">
@@ -34,12 +35,13 @@
           <i class="fa-solid fa-list-ul"></i>
         </button>
         <button class="btn-view" [class.active]="viewMode === 'large'" (click)="setViewMode('large')">
-           <i class="fa-solid fa-border-all"></i>
+          <i class="fa-solid fa-border-all"></i>
         </button>
       </div>
 
       <!-- Toggle Filtros -->
-      <button class="header-btn ms-2 border border-secondary" [class.active]="showFilters" (click)="showFilters = !showFilters">
+      <button class="header-btn ms-2 border border-secondary" [class.active]="showFilters"
+        (click)="showFilters = !showFilters">
         <i class="fa-solid fa-sliders"></i> Filtros
       </button>
 
@@ -56,20 +58,22 @@
     <div class="mb-4">
       <div class="text-secondary mb-3" style="font-size: 0.85rem;">Puntuacion minima</div>
       <div class="d-flex gap-2">
-        <button class="filter-pill" [class.active]="minScoreFilter === 'Todas'" (click)="setMinScore('Todas')">Todas</button>
-        <button class="filter-pill" [class.active]="minScoreFilter === '3+'" (click)="setMinScore('3+')"><i class="fa-solid fa-star fs-6 me-1"></i> 3+</button>
-        <button class="filter-pill" [class.active]="minScoreFilter === '4+'" (click)="setMinScore('4+')"><i class="fa-solid fa-star fs-6 me-1"></i> 4+</button>
-        <button class="filter-pill" [class.active]="minScoreFilter === '5+'" (click)="setMinScore('5+')"><i class="fa-solid fa-star fs-6 me-1"></i> 5+</button>
+        <button class="filter-pill" [class.active]="minScoreFilter === 'Todas'"
+          (click)="setMinScore('Todas')">Todas</button>
+        <button class="filter-pill" [class.active]="minScoreFilter === '3+'" (click)="setMinScore('3+')"><i
+            class="fa-solid fa-star fs-6 me-1"></i> 3+</button>
+        <button class="filter-pill" [class.active]="minScoreFilter === '4+'" (click)="setMinScore('4+')"><i
+            class="fa-solid fa-star fs-6 me-1"></i> 4+</button>
+        <button class="filter-pill" [class.active]="minScoreFilter === '5+'" (click)="setMinScore('5+')"><i
+            class="fa-solid fa-star fs-6 me-1"></i> 5+</button>
       </div>
     </div>
 
     <div>
       <div class="text-secondary mb-3" style="font-size: 0.85rem;">Etiquetas</div>
       <div class="d-flex flex-wrap gap-2">
-        <div class="filter-pill" 
-             *ngFor="let tag of availableFilterTags"
-             [class.active]="selectedTags.includes(tag)"
-             (click)="toggleTagFilter(tag)">
+        <div class="filter-pill" *ngFor="let tag of availableFilterTags" [class.active]="selectedTags.includes(tag)"
+          (click)="toggleTagFilter(tag)">
           {{ tag }}
         </div>
       </div>
@@ -78,20 +82,22 @@
 
 
   <!-- Listado de Reseñas -->
-  <div class="d-flex flex-column gap-4" [ngClass]="{'list-mode': viewMode === 'list', 'large-mode': viewMode === 'large'}">
-    
+  <div class="d-flex flex-column gap-4"
+    [ngClass]="{'list-mode': viewMode === 'list', 'large-mode': viewMode === 'large'}">
+
     <!-- Skeleton loader -->
     <ng-container *ngIf="isLoading">
-      <div class="p-4 rounded-4" style="background-color: var(--card-bg); border: 1px solid var(--card-border);" *ngFor="let s of [1,2,3]">
+      <div class="p-4 rounded-4" style="background-color: var(--card-bg); border: 1px solid var(--card-border);"
+        *ngFor="let s of [1,2,3]">
         <div class="d-flex w-100">
-           <div class="skeleton-pulse rounded me-4 flex-shrink-0 card-image-box"></div>
-           <div class="w-100 py-2">
-             <div class="skeleton-pulse rounded mb-3" style="height: 18px; width: 40%;"></div>
-             <div class="skeleton-pulse rounded mb-4" style="height: 14px; width: 30%;"></div>
-             <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 90%;"></div>
-             <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 85%;"></div>
-             <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 60%;"></div>
-           </div>
+          <div class="skeleton-pulse rounded me-4 flex-shrink-0 card-image-box"></div>
+          <div class="w-100 py-2">
+            <div class="skeleton-pulse rounded mb-3" style="height: 18px; width: 40%;"></div>
+            <div class="skeleton-pulse rounded mb-4" style="height: 14px; width: 30%;"></div>
+            <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 90%;"></div>
+            <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 85%;"></div>
+            <div class="skeleton-pulse rounded mb-2" style="height: 14px; width: 60%;"></div>
+          </div>
         </div>
       </div>
     </ng-container>
@@ -107,39 +113,44 @@
     <ng-container *ngIf="!isLoading">
       <div class="review-card p-4 rounded-4 w-100" *ngFor="let review of filteredReviews; let i = index">
         <div class="d-flex flex-column flex-md-row">
-          
+
           <!-- Portada izquierda interactiva por modo -->
-          <a [routerLink]="['/album', review.artist, review.albumTitle]" class="rounded overflow-hidden me-md-4 mb-3 mb-md-0 card-image-box bg-dark flex-shrink-0 text-decoration-none d-block">
+          <a [routerLink]="['/album', review.artist, review.albumTitle]"
+            class="rounded overflow-hidden me-md-4 mb-3 mb-md-0 card-image-box bg-dark flex-shrink-0 text-decoration-none d-block">
             <img [src]="review.albumImage" class="w-100 h-100 object-fit-cover" [alt]="review.albumTitle">
           </a>
 
           <!-- Contenido derecha -->
           <div class="flex-grow-1 d-flex flex-column justify-content-between">
-            
+
             <!-- Bloque Superior: Meta data + Score -->
             <div>
               <div class="d-flex justify-content-between align-items-start mb-2">
-                
+
                 <div>
                   <!-- Titulo del Disco y Artista -->
                   <a [routerLink]="['/album', review.artist, review.albumTitle]" class="text-decoration-none">
                     <h6 class="fw-bold mb-1 text-white" style="font-size: 1.05rem;">
-                      {{ review.albumTitle }} <span class="text-secondary fw-normal mx-1">—</span> <span class="text-secondary fw-normal">{{ review.artist }}</span>
+                      {{ review.albumTitle }} <span class="text-secondary fw-normal mx-1">—</span> <span
+                        class="text-secondary fw-normal">{{ review.artist }}</span>
                     </h6>
                   </a>
-                  
+
                   <!-- Titulo de la Reseña -->
                   <h5 class="fw-bold text-white fs-5 mt-3 mb-2">{{ review.reviewTitle }}</h5>
 
                   <!-- Usuario y Fecha y Escuchas (Escuchas extra en modo large) -->
                   <div class="d-flex align-items-center mb-3">
                     <a [routerLink]="['/profile', review.userId]" class="text-decoration-none">
-                      <img [src]="review.userAvatar" class="rounded-circle me-2" style="width: 22px; height: 22px;" alt="Avatar">
+                      <img [src]="review.userAvatar" class="rounded-circle me-2" style="width: 22px; height: 22px;"
+                        alt="Avatar">
                     </a>
                     <span class="text-secondary" style="font-size: 0.85rem;">
-                      <a [routerLink]="['/profile', review.userId]" class="text-white fw-bold text-decoration-none">{{ review.username }}</a> <span class="mx-2">•</span> {{ review.date }}
+                      <a [routerLink]="['/profile', review.userId]" class="text-white fw-bold text-decoration-none">{{
+                        review.username }}</a> <span class="mx-2">•</span> {{ review.date }}
                       <ng-container *ngIf="viewMode === 'large' && review.listenCount">
-                        <span class="mx-2">—</span> <i class="fa-solid fa-headphones me-1"></i> {{ review.listenCount }} escuchas
+                        <span class="mx-2">—</span> <i class="fa-solid fa-headphones me-1"></i> {{ review.listenCount }}
+                        escuchas
                       </ng-container>
                     </span>
                   </div>
@@ -155,21 +166,20 @@
                 <!-- Estrellas y Vibe en esquina derecha -->
                 <div class="d-flex flex-column align-items-end gap-1 flex-shrink-0 pt-1">
                   <!-- Bloque Vibe y Estrellas alineadas -->
-                  <div class="d-flex align-items-center" [ngClass]="{'flex-column align-items-end gap-1': viewMode === 'large', 'gap-2': viewMode === 'list'}">
-                    
+                  <div class="d-flex align-items-center"
+                    [ngClass]="{'flex-column align-items-end gap-1': viewMode === 'large', 'gap-2': viewMode === 'list'}">
+
                     <div class="text-warning-custom fs-6 d-flex align-items-center">
-                      <!-- Estrellas llenas -->
                       <i class="fa-solid fa-star" *ngFor="let s of fullStars(review.rating)"></i>
-                      <!-- Media estrella -->
                       <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(review.rating)"></i>
-                      <!-- Estrellas vacías -->
                       <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(review.rating)"></i>
                     </div>
 
                     <!-- En layout large, la carita baja, y lleva texto. En layout list es solo icono alineado con la estrella. -->
-                    <div class="d-flex align-items-center gap-1" [style.color]="review.vibeColor" style="font-size: 0.85rem;">
-                       <i [class]="review.vibeIcon" class="fs-5"></i>
-                       <span class="fw-bold" *ngIf="viewMode === 'large'">{{ review.vibeMood }}</span>
+                    <div class="d-flex align-items-center gap-1" [style.color]="review.vibeColor"
+                      style="font-size: 0.85rem;">
+                      <i [class]="review.vibeIcon" class="fs-5"></i>
+                      <span class="fw-bold" *ngIf="viewMode === 'large'">{{ review.vibeMood }}</span>
                     </div>
                   </div>
                 </div>
@@ -181,23 +191,119 @@
                 {{ review.content }}
               </p>
 
-              <!-- Cancion Favorita (Solo Large Mode) -->
-              <div class="mt-4 mb-4" *ngIf="viewMode === 'large' && review.favoriteSong">
-                <div class="d-inline-flex align-items-center rounded px-3 py-2" style="background-color: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
-                  <i class="fa-solid fa-music text-accent-red me-2"></i> 
-                  <span class="text-secondary" style="font-size: 0.9rem;">Cancion favorita: <span class="text-white fw-bold ms-1">{{ review.favoriteSong }}</span></span>
-                </div>
+              <!-- ===== BLOQUE INFO EXTRA — SOLO LARGE MODE ===== -->
+              <div class="d-flex flex-column gap-3 mb-4" *ngIf="viewMode === 'large'">
+
+                  <!-- Primera mención como pull quote -->
+                  <blockquote *ngIf="review.primera_mencion"
+                              class="mb-0 ps-3"
+                              style="border-left: 3px solid var(--accent-red);">
+                      <p class="mb-0 text-white fst-italic fw-medium" style="font-size:0.95rem; line-height:1.5;">
+                          "{{ review.primera_mencion }}"
+                      </p>
+                  </blockquote>
+
+                  <!-- Preguntas guía legacy -->
+                  <div class="d-flex flex-column gap-2"
+                       *ngIf="review.preguntasGuia?.emotions || review.preguntasGuia?.recommend">
+                      <div *ngIf="review.preguntasGuia?.emotions"
+                           class="d-flex align-items-start gap-2">
+                          <i class="fa-solid fa-heart text-accent-red mt-1" style="font-size:0.75rem;flex-shrink:0;"></i>
+                          <span class="text-secondary" style="font-size:0.85rem;">
+                              <span class="text-white fw-bold">Emociones: </span>{{ review.preguntasGuia.emotions }}
+                          </span>
+                      </div>
+                      <div *ngIf="review.preguntasGuia?.recommend"
+                           class="d-flex align-items-start gap-2">
+                          <i class="fa-solid fa-user-plus text-accent-red mt-1" style="font-size:0.75rem;flex-shrink:0;"></i>
+                          <span class="text-secondary" style="font-size:0.85rem;">
+                              <span class="text-white fw-bold">Lo recomendaría a: </span>{{ review.preguntasGuia.recommend }}
+                          </span>
+                      </div>
+                  </div>
+
+                  <!-- Fila de pills: canción favorita + escuchas + evolución + contexto -->
+                  <div class="d-flex flex-wrap gap-2">
+
+                      <!-- Canción favorita -->
+                      <div *ngIf="review.favoriteSong"
+                           class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-1"
+                           style="background:rgba(192,57,43,0.12); border:1px solid rgba(192,57,43,0.3);">
+                          <i class="fa-solid fa-music text-accent-red" style="font-size:0.72rem;"></i>
+                          <span class="text-white fw-bold" style="font-size:0.82rem;">{{ review.favoriteSong }}</span>
+                      </div>
+
+                      <!-- Evolución -->
+                      <div *ngIf="review.evolucion"
+                           class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-1"
+                           style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                          <i class="fa-solid fa-seedling text-accent-red" style="font-size:0.72rem;"
+                             *ngIf="review.evolucion === 'crece'"></i>
+                          <i class="fa-solid fa-bolt text-accent-red" style="font-size:0.72rem;"
+                             *ngIf="review.evolucion === 'inmediato'"></i>
+                          <span class="text-secondary" style="font-size:0.82rem;">
+                              {{ review.evolucion === 'crece' ? 'Crece con el tiempo' : 'Impacto inmediato' }}
+                          </span>
+                      </div>
+
+                      <!-- Contexto de escucha -->
+                      <div *ngIf="review.contextoEscucha"
+                           class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-1"
+                           style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                          <i class="fa-solid fa-headphones text-accent-red" style="font-size:0.72rem;"></i>
+                          <span class="text-secondary" style="font-size:0.82rem;">{{ review.contextoEscucha }}</span>
+                      </div>
+
+                  </div>
+
+                  <!-- Encuesta: respuestas SI/NO -->
+                  <div class="d-flex flex-wrap gap-2"
+                       *ngIf="review.encuesta?.lyricsLiked !== null || review.encuesta?.listenAgain !== null || review.encuesta?.recommend !== null">
+
+                      <div *ngIf="review.encuesta?.lyricsLiked !== null && review.encuesta?.lyricsLiked !== undefined"
+                           class="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1"
+                           style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                          <i class="fa-solid fa-check text-success" style="font-size:0.7rem;"
+                             *ngIf="review.encuesta.lyricsLiked"></i>
+                          <i class="fa-solid fa-xmark text-danger" style="font-size:0.7rem;"
+                             *ngIf="!review.encuesta.lyricsLiked"></i>
+                          <span class="text-secondary" style="font-size:0.8rem;">Letras</span>
+                      </div>
+
+                      <div *ngIf="review.encuesta?.listenAgain !== null && review.encuesta?.listenAgain !== undefined"
+                           class="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1"
+                           style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                          <i class="fa-solid fa-check text-success" style="font-size:0.7rem;"
+                             *ngIf="review.encuesta.listenAgain"></i>
+                          <i class="fa-solid fa-xmark text-danger" style="font-size:0.7rem;"
+                             *ngIf="!review.encuesta.listenAgain"></i>
+                          <span class="text-secondary" style="font-size:0.8rem;">Lo escucharía de nuevo</span>
+                      </div>
+
+                      <div *ngIf="review.encuesta?.recommend !== null && review.encuesta?.recommend !== undefined"
+                           class="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1"
+                           style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                          <i class="fa-solid fa-check text-success" style="font-size:0.7rem;"
+                             *ngIf="review.encuesta.recommend"></i>
+                          <i class="fa-solid fa-xmark text-danger" style="font-size:0.7rem;"
+                             *ngIf="!review.encuesta.recommend"></i>
+                          <span class="text-secondary" style="font-size:0.8rem;">Lo recomendaría</span>
+                      </div>
+
+                  </div>
+
               </div>
+              <!-- ===== FIN BLOQUE INFO EXTRA ===== -->
 
             </div>
 
             <!-- Interacciones Bottom (solo Like) -->
             <div class="d-flex align-items-center mt-auto pt-2">
-              <button class="btn btn-link text-decoration-none p-0 like-btn d-flex align-items-center" 
-                      [ngClass]="review.likedByUser ? 'text-danger' : 'text-secondary'"
-                      (click)="toggleLikeDirect(review, $event)" 
-                      style="font-size: 0.9rem;">
-                <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" class="me-2 fs-5 transition-transform" [class.like-pop]="review.likedByUser"></i> 
+              <button class="btn btn-link text-decoration-none p-0 like-btn d-flex align-items-center"
+                [ngClass]="review.likedByUser ? 'text-danger' : 'text-secondary'"
+                (click)="toggleLikeDirect(review, $event)" style="font-size: 0.9rem;">
+                <i [class]="review.likedByUser ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+                  class="me-2 fs-5 transition-transform" [class.like-pop]="review.likedByUser"></i>
                 {{ review.likes }}
               </button>
             </div>
@@ -209,9 +315,8 @@
 
     <!-- Botón Cargar Más -->
     <div class="text-center mt-4 mb-5" *ngIf="currentPage < lastPage">
-      <button class="btn btn-outline-light rounded-pill px-5 py-2 fw-bold" 
-              (click)="loadMore()" 
-              [disabled]="isLoadingMore">
+      <button class="btn btn-outline-light rounded-pill px-5 py-2 fw-bold" (click)="loadMore()"
+        [disabled]="isLoadingMore">
         <span *ngIf="!isLoadingMore">Cargar más reseñas</span>
         <span *ngIf="isLoadingMore">
           <i class="fa-solid fa-circle-notch fa-spin me-2"></i> Cargando...
