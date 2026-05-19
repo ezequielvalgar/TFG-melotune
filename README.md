@@ -1,45 +1,181 @@
-# MeloTune - (TFG)
+# 🎵 MeloTune
 
-## Tecnologías Utilizadas
+**Plataforma Social de Reseñas Musicales**
 
-- **Framework:** Angular 19.
-- **Estilos / UI:** Bootstrap 5 (vía CDN) + Tema y variables CSS a medida.
-- **Iconografía:** FontAwesome 6.
-- **Tipografía:** Outfit (Google Fonts).
+MeloTune es una aplicación web full-stack donde los usuarios pueden reseñar álbumes, seguir a otros usuarios, descubrir música nueva y construir su propia colección musical. Integra las APIs de Spotify y Last.fm para obtener datos musicales en tiempo real.
 
-## Requisitos previos
+---
 
-Para poder ejecutar este proyecto en tu máquina local, necesitarás tener instalado:
-- [Node.js](https://nodejs.org/) (versión v18 o superior recomendada).
-- [npm](https://www.npmjs.com/) (Gestor de paquetes que se instala junto a Node).
+## 🏗️ Stack Tecnológico
 
-## Instrucciones de instalación y ejecución
+| Capa | Tecnología |
+|---|---|
+| **Frontend** | Angular 19 + TypeScript |
+| **Backend** | Laravel 11 (PHP 8.2) |
+| **Base de Datos** | MySQL 8.0 |
+| **Servidor Web** | Nginx (Alpine) |
+| **Contenerización** | Docker + Docker Compose |
+| **APIs Externas** | Spotify Web API · Last.fm API |
+| **UI / Estilos** | Bootstrap 5 · CSS Variables · FontAwesome 6 |
+| **Tipografía** | Outfit (Google Fonts) |
 
-Sigue estos pasos para arrancar el entorno de desarrollo y visualizar el proyecto:
+---
 
-1. **Abrir la terminal en este directorio**
-   Asegúrate de que estás en la ruta `frontend/melotune` dentro de tu proyecto.
+## 📋 Requisitos Previos
 
-2. **Instalar dependencias**
-   Ejecuta el siguiente comando para descargar los paquetes necesarios alojados en `package.json` o `pnpm-lock.yaml`. Angular descargará sus librerías de infraestructura:
+Para desplegar el proyecto solo necesitas tener instalado:
 
-   npm install
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (versión 24 o superior)
+- Docker Compose (incluido con Docker Desktop)
 
+> ⚠️ **No necesitas** Node.js, PHP, MySQL ni ningún otro software instalado localmente. Docker se encarga de todo.
 
-3. **Iniciar el servidor web local**
-   Una vez concluida la instalación, inicia el servidor de desarrollo de Angular:
+---
 
-   npm start
+## ⚙️ Configuración del Entorno
 
+Antes de arrancar, crea el archivo de variables de entorno en la raíz del proyecto:
 
-4. **Visualizar la página**
-   Abre una pestaña en tu navegador web de preferencia (Chrome, Firefox, Safari) y dirígete a:
-   [http://localhost:4200/](http://localhost:4200/)
+```bash
+# En la raíz del proyecto (junto a docker-compose.prod.yml)
+cp .env.prod.example .env.prod
+```
 
-   Deberia aparecer la pagina principal
+Edita `.env.prod` y rellena los valores necesarios:
 
-## Consideraciones sobre la versión actual
+```env
+# Base de Datos
+DB_ROOT_PASSWORD=tu_password_root_seguro
+DB_DATABASE=melotune
+DB_USERNAME=melotune
+DB_PASSWORD=tu_password_seguro
 
-- **Archivos Estáticos (`public/`):** El logotipo principal del menú de navegación (`logo.png`) se almacena en la carpeta `public/`.
-- **Para las imagenes** he utilizado una pagina para poner imagenes de texto plano llamado "placehold" lo sustituire por imagenes reales cuando tenga la api
-- **Siguiente Fase:** La futura integración consistirá en solicitar esos datos vía `HttpClient` hacia la API en Laravel correspondiente que ya ha sido diseñada.
+# Laravel
+APP_URL=http://localhost:8000
+APP_KEY=base64:TU_APP_KEY_AQUI
+SANCTUM_STATEFUL_DOMAINS=localhost,localhost:80,localhost:8000
+SESSION_DOMAIN=localhost
+
+# API de Spotify (developer.spotify.com)
+SPOTIFY_CLIENT_ID=tu_client_id
+SPOTIFY_CLIENT_SECRET=tu_client_secret
+
+# API de Last.fm (last.fm/api)
+LASTFM_API_KEY=tu_api_key
+LASTFM_SHARED_SECRET=tu_shared_secret
+
+# Correo (SMTP)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.tu-proveedor.com
+MAIL_PORT=587
+MAIL_USERNAME=tu_email
+MAIL_PASSWORD=tu_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=tu_email
+MAIL_FROM_NAME=MeloTune
+```
+
+> Para generar una `APP_KEY` válida de Laravel puedes usar: `php artisan key:generate --show`
+
+---
+
+## 🚀 Despliegue en Producción (Docker)
+
+### 1. Arrancar todos los contenedores
+
+```bash
+docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+```
+
+Esto levantará 4 contenedores:
+- `melotune_db_prod` — MySQL 8.0
+- `melotune_backend_prod` — Laravel (PHP-FPM)
+- `melotune_nginx_backend` — Nginx → Backend (puerto 8000)
+- `melotune_frontend_prod` — Angular compilado servido por Nginx (puerto 80)
+
+### 2. Ejecutar las migraciones de base de datos
+
+Solo es necesario la primera vez (o tras un `--build`):
+
+```bash
+docker exec -it melotune_backend_prod php artisan migrate --force
+```
+
+### 3. Acceder a la aplicación
+
+| Servicio | URL |
+|---|---|
+| **Frontend (App)** | http://localhost |
+| **Backend (API)** | http://localhost:8000/api |
+
+---
+
+## 🔄 Comandos Útiles
+
+```bash
+# Parar todos los contenedores (sin borrar datos)
+docker-compose -f docker-compose.prod.yml down
+
+# Reconstruir imágenes tras cambios en el código
+docker-compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
+
+# Ver logs del backend en tiempo real
+docker logs -f melotune_backend_prod
+
+# Ver logs de Nginx
+docker logs -f melotune_nginx_backend
+
+# Limpiar caché de Laravel
+docker exec melotune_backend_prod php artisan optimize:clear
+
+# Acceder a la consola del backend
+docker exec -it melotune_backend_prod bash
+
+# Acceder a la consola de MySQL
+docker exec -it melotune_db_prod mysql -u melotune -p melotune
+```
+
+---
+
+## 💾 Backup y Restauración de la Base de Datos
+
+**Crear backup:**
+```bash
+docker exec melotune_db_prod mysqldump -u melotune -p melotune > backup_melotune.sql
+```
+
+**Restaurar backup:**
+```bash
+cat backup_melotune.sql | docker exec -i melotune_db_prod mysql -u melotune -p melotune
+```
+
+---
+
+## 🗂️ Estructura del Proyecto
+
+```
+TFG/
+├── docker-compose.prod.yml     # Orquestación de contenedores
+├── .env.prod                   # Variables de entorno (NO subir a Git)
+├── backend/
+│   └── melotune/               # Proyecto Laravel
+│       ├── Dockerfile.prod
+│       ├── nginx.conf
+│       ├── app/
+│       ├── config/
+│       ├── database/migrations/
+│       └── routes/api.php
+└── frontend/
+    └── melotune/               # Proyecto Angular
+        ├── Dockerfile.prod
+        └── src/
+```
+
+---
+
+## 📌 Notas Importantes
+
+- El archivo `.env.prod` contiene credenciales sensibles. Está incluido en `.gitignore` y **nunca debe subirse al repositorio**.
+- Los datos de MySQL se persisten en el volumen Docker `db_data_prod`. Al ejecutar `docker-compose down` los datos **no se borran**. Para borrarlos completamente usar `docker-compose down -v`.
+- Para aplicar cambios en el código Angular o Laravel es necesario reconstruir las imágenes con `--build`.
+
