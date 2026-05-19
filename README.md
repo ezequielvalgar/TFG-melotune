@@ -2,7 +2,7 @@
 
 **Plataforma Social de Reseñas Musicales**
 
-MeloTune es una aplicación web full-stack donde los usuarios pueden reseñar álbumes, seguir a otros usuarios, descubrir música nueva y construir su propia colección musical. Integra las APIs de Spotify y Last.fm para obtener datos musicales en tiempo real.
+MeloTune es una aplicación web socialdonde los usuarios pueden reseñar álbumes, seguir a otros usuarios, descubrir música nueva y construir su propia colección musical. Integra las APIs de Spotify y Last.fm para obtener datos musicales en tiempo real.
 
 ---
 
@@ -41,43 +41,7 @@ Antes de arrancar, crea el archivo de variables de entorno en la raíz del proye
 cp .env.prod.example .env.prod
 ```
 
-Edita `.env.prod` y rellena los valores necesarios:
-
-```env
-# Base de Datos
-DB_ROOT_PASSWORD=tu_password_root_seguro
-DB_DATABASE=melotune
-DB_USERNAME=melotune
-DB_PASSWORD=tu_password_seguro
-
-# Laravel
-APP_URL=http://localhost:8000
-APP_KEY=base64:TU_APP_KEY_AQUI
-SANCTUM_STATEFUL_DOMAINS=localhost,localhost:80,localhost:8000
-SESSION_DOMAIN=localhost
-
-# API de Spotify (developer.spotify.com)
-SPOTIFY_CLIENT_ID=tu_client_id
-SPOTIFY_CLIENT_SECRET=tu_client_secret
-
-# API de Last.fm (last.fm/api)
-LASTFM_API_KEY=tu_api_key
-LASTFM_SHARED_SECRET=tu_shared_secret
-
-# Correo (SMTP)
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.tu-proveedor.com
-MAIL_PORT=587
-MAIL_USERNAME=tu_email
-MAIL_PASSWORD=tu_password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=tu_email
-MAIL_FROM_NAME=MeloTune
-```
-
-> Para generar una `APP_KEY` válida de Laravel puedes usar: `php artisan key:generate --show`
-
----
+Edita `.env.prod` y rellena los valores necesarios
 
 ## 🚀 Despliegue en Producción (Docker)
 
