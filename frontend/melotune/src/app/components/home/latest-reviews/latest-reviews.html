@@ -59,7 +59,7 @@
                 <span class="d-flex align-items-center" style="font-size: 0.75rem;">
                   <!-- Estrellas llenas -->
                   <i class="fa-solid fa-star" *ngFor="let s of fullStars(review.rating)"></i>
-                  <!-- Media estrella -->
+                  <!-- Media estrella NO FUNCIONA CREO-->
                   <i class="fa-solid fa-star-half-stroke" *ngIf="hasHalfStar(review.rating)"></i>
                   <!-- Estrellas vacías -->
                   <i class="fa-regular fa-star text-secondary" *ngFor="let e of emptyStars(review.rating)"></i>

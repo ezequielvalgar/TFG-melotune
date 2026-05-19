@@ -1,38 +1,38 @@
 <div class="row justify-content-center mb-5 mt-4">
   <div class="col-12 col-md-10 col-lg-8">
     <div class="position-relative">
-      <i class="fa-solid fa-music text-secondary position-absolute" style="top: 50%; transform: translateY(-50%); left: 24px;"></i>
-      <input type="text" 
-             class="form-control form-control-lg search-hero-input w-100" 
-             placeholder="¿QUÉ BUSCAMOS HOY?" 
-             [(ngModel)]="query"
-             (ngModelChange)="onSearchChange()"
-             style="padding-left: 56px !important; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;">
+      <i class="fa-solid fa-music text-secondary position-absolute"
+        style="top: 50%; transform: translateY(-50%); left: 24px;"></i>
+      <input type="text" class="form-control form-control-lg search-hero-input w-100" placeholder="¿QUÉ BUSCAMOS HOY?"
+        [(ngModel)]="query" (ngModelChange)="onSearchChange()"
+        style="padding-left: 56px !important; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;">
 
-      <!-- Dropdown flotante con los resultados de la API (no altera el resto de la página) -->
-      <div class="position-absolute w-100 rounded shadow mt-2" 
-           style="background-color: var(--card-bg); z-index: 1000; max-height: 400px; overflow-y: auto; top: 100%; border: 1px solid var(--card-border);"
-           *ngIf="query.length > 0">
-           
+      <!-- resultadossoso flotante con los resultados de la API (no altera el resto de la página) -->
+      <div class="position-absolute w-100 rounded shadow mt-2"
+        style="background-color: var(--card-bg); z-index: 1000; max-height: 400px; overflow-y: auto; top: 100%; border: 1px solid var(--card-border);"
+        *ngIf="query.length > 0">
+
         <div class="p-3 text-center text-secondary" *ngIf="isSearching">
           <i class="fa-solid fa-circle-notch fa-spin me-2"></i> Buscando...
         </div>
-        
-        <div class="p-3 text-center text-secondary" *ngIf="!isSearching && query.length > 0 && results.length === 0 && searchUsers.length === 0">
+
+        <div class="p-3 text-center text-secondary"
+          *ngIf="!isSearching && query.length > 0 && results.length === 0 && searchUsers.length === 0">
           No se encontraron resultados reales para "{{ query }}"
         </div>
 
         <!-- ===== Sección Usuarios ===== -->
-        <div *ngIf="!isSearching && searchUsers.length > 0" class="search-section border-bottom border-secondary px-2 pt-2 pb-1" style="border-color: rgba(255,255,255,0.05) !important;">
-          <p class="text-secondary mb-1 px-2" style="font-size: 0.7rem; letter-spacing: 1px; font-weight: 700;">USUARIOS</p>
+        <div *ngIf="!isSearching && searchUsers.length > 0"
+          class="search-section border-bottom border-secondary px-2 pt-2 pb-1"
+          style="border-color: rgba(255,255,255,0.05) !important;">
+          <p class="text-secondary mb-1 px-2" style="font-size: 0.7rem; letter-spacing: 1px; font-weight: 700;">USUARIOS
+          </p>
           <div *ngFor="let user of searchUsers">
-            <a [routerLink]="['/profile', user.id]"
-               (click)="clearSearch()"
-               class="text-decoration-none d-flex align-items-center gap-3 flex-grow-1 p-2 search-user-item">
-              <img [src]="user.foto_perfil || 'https://ui-avatars.com/api/?name=' + user.username + '&background=1a1c2e&color=E83E8C&size=200&bold=true'"
-                   class="rounded-circle"
-                   style="width: 38px; height: 38px; object-fit: cover;"
-                   [alt]="user.username">
+            <a [routerLink]="['/profile', user.id]" (click)="clearSearch()"
+              class="text-decoration-none d-flex align-items-center gap-3 flex-grow-1 p-2 search-user-item">
+              <img
+                [src]="user.foto_perfil || 'https://ui-avatars.com/api/?name=' + user.username + '&background=1a1c2e&color=E83E8C&size=200&bold=true'"
+                class="rounded-circle" style="width: 38px; height: 38px; object-fit: cover;" [alt]="user.username">
               <div class="flex-grow-1 overflow-hidden">
                 <p class="mb-0 fw-bold text-white text-truncate" style="font-size: 0.875rem;">
                   {{ user.nombre }}
@@ -54,39 +54,40 @@
         </div>
 
         <!-- ===== Sección Artistas ===== -->
-        <div *ngIf="!isSearching && artistResults.length > 0" 
-             class="search-section border-bottom border-secondary px-2 pt-2 pb-1" 
-             style="border-color: rgba(255,255,255,0.05) !important;">
-            <p class="text-secondary mb-1 px-2" 
-               style="font-size: 0.7rem; letter-spacing: 1px; font-weight: 700;">ARTISTAS</p>
-            <button *ngFor="let artist of artistResults"
-                    class="list-group-item list-group-item-action bg-transparent text-white border-0 p-2 d-flex align-items-center gap-3 w-100 search-user-item"
-                    (click)="onArtistSelect(artist)">
-                <img [src]="artist.image || 'https://placehold.co/40x40/222436/60658a?text=?'"
-                     class="rounded-circle object-fit-cover flex-shrink-0"
-                     style="width:40px;height:40px;"
-                     [alt]="artist.name">
-                <div class="text-start overflow-hidden">
-                    <p class="mb-0 fw-bold text-white text-truncate" style="font-size:0.875rem;">
-                        {{ artist.name }}
-                    </p>
-                    <p class="mb-0 text-secondary text-truncate" style="font-size:0.75rem;">
-                        Artista
-                    </p>
-                </div>
-            </button>
+        <div *ngIf="!isSearching && artistResults.length > 0"
+          class="search-section border-bottom border-secondary px-2 pt-2 pb-1"
+          style="border-color: rgba(255,255,255,0.05) !important;">
+          <p class="text-secondary mb-1 px-2" style="font-size: 0.7rem; letter-spacing: 1px; font-weight: 700;">ARTISTAS
+          </p>
+          <button *ngFor="let artist of artistResults"
+            class="list-group-item list-group-item-action bg-transparent text-white border-0 p-2 d-flex align-items-center gap-3 w-100 search-user-item"
+            (click)="onArtistSelect(artist)">
+            <img [src]="artist.image || 'https://placehold.co/40x40/222436/60658a?text=?'"
+              class="rounded-circle object-fit-cover flex-shrink-0" style="width:40px;height:40px;" [alt]="artist.name">
+            <div class="text-start overflow-hidden">
+              <p class="mb-0 fw-bold text-white text-truncate" style="font-size:0.875rem;">
+                {{ artist.name }}
+              </p>
+              <p class="mb-0 text-secondary text-truncate" style="font-size:0.75rem;">
+                Artista
+              </p>
+            </div>
+          </button>
         </div>
 
         <!-- ===== Sección Álbumes (sin modificar) ===== -->
         <div class="list-group list-group-flush rounded" *ngIf="!isSearching && results.length > 0">
-          <button class="list-group-item list-group-item-action bg-transparent text-white border-bottom border-secondary p-3 d-flex align-items-center"
-                  style="border-color: rgba(255,255,255,0.05) !important;"
-                  *ngFor="let album of results"
-                  (click)="onAlbumSelect(album)">
+          <button
+            class="list-group-item list-group-item-action bg-transparent text-white border-bottom border-secondary p-3 d-flex align-items-center"
+            style="border-color: rgba(255,255,255,0.05) !important;" *ngFor="let album of results"
+            (click)="onAlbumSelect(album)">
             <div class="d-flex w-100 justify-content-between align-items-center">
               <div class="d-flex align-items-center">
-                <img *ngIf="album.image" [src]="album.image" class="rounded-circle me-3 object-fit-cover" style="width: 40px; height: 40px; border-radius: 8px !important;" alt="Album Cover">
-                <i *ngIf="!album.image" class="fa-solid fa-compact-disc text-secondary rounded d-flex justify-content-center align-items-center me-3" style="width: 40px; height: 40px; background-color: rgba(255,255,255,0.05);"></i>
+                <img *ngIf="album.image" [src]="album.image" class="rounded-circle me-3 object-fit-cover"
+                  style="width: 40px; height: 40px; border-radius: 8px !important;" alt="Album Cover">
+                <i *ngIf="!album.image"
+                  class="fa-solid fa-compact-disc text-secondary rounded d-flex justify-content-center align-items-center me-3"
+                  style="width: 40px; height: 40px; background-color: rgba(255,255,255,0.05);"></i>
                 <div>
                   <h6 class="mb-1 text-uppercase fw-bold text-white">{{ album.name }}</h6>
                   <small class="text-secondary" style="font-size: 0.8rem;">

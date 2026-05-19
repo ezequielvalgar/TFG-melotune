@@ -3,7 +3,7 @@
   padding: 4rem 0 5rem;
 }
 
-/* ===== HEADER (same as privacy) ===== */
+/* ===== HEADER ===== */
 .policy-header {
   margin-bottom: 3rem;
 }
@@ -39,7 +39,7 @@
   line-height: 1.75;
 }
 
-/* ===== WHAT ARE COOKIES ===== */
+/* ===== que son las  COOKIES ===== */
 .what-card {
   padding: 2rem 2.5rem;
   border-radius: 14px;
@@ -64,7 +64,7 @@
   margin-bottom: 0;
 }
 
-/* ===== PREFS HEADER ===== */
+/* =====  HEADER ===== */
 .prefs-header {
   display: flex;
   align-items: center;
@@ -121,7 +121,7 @@
   box-shadow: 0 6px 18px rgba(255, 51, 68, 0.45);
 }
 
-/* ===== COOKIE CATEGORY CARD ===== */
+/* ===== COOKIE  CARD ===== */
 .cookie-category {
   border-radius: 14px;
   margin-bottom: 1.25rem;
@@ -153,10 +153,21 @@
   flex-shrink: 0;
 }
 
-.essential-icon { color: #22c55e; }
-.functional-icon { color: #3b82f6; }
-.analytics-icon { color: var(--accent-yellow); }
-.marketing-icon { color: #a855f7; }
+.essential-icon {
+  color: #22c55e;
+}
+
+.functional-icon {
+  color: #3b82f6;
+}
+
+.analytics-icon {
+  color: var(--accent-yellow);
+}
+
+.marketing-icon {
+  color: #a855f7;
+}
 
 .category-name {
   font-size: 1.05rem;
@@ -172,7 +183,7 @@
   margin: 0;
 }
 
-/* ===== ALWAYS ACTIVE BADGE ===== */
+/* ===== SIEMPRE  ACTIVo  ===== */
 .always-active-badge {
   flex-shrink: 0;
   font-size: 0.78rem;
@@ -222,7 +233,7 @@
   transform: translateX(22px);
 }
 
-/* ===== COOKIE LIST ===== */
+/* ===== COOKIE  ===== */
 .cookie-list {
   border-top: 1px solid var(--card-border);
   padding: 0 2rem 1.5rem;

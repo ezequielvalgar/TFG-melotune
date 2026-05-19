@@ -26,8 +26,8 @@ class LastFmService
 
     private readonly string $apiKey;
     private readonly string $baseUrl;
-    private readonly int    $searchLimit;
-    private readonly int    $cacheTtl;
+    private readonly int $searchLimit;
+    private readonly int $cacheTtl;
     protected string $spotifyAccessToken = '';
 
     /** @var array<string, string> */
@@ -37,14 +37,14 @@ class LastFmService
 
     /**
      * CAMBIO: se eliminó env() directo. Ahora todo viene de config('services.lastfm.*'),
-     * que es la forma recomendada en Laravel para no acoplar el código al entorno.
+     * que es la forma recomendada en Laravel para no acoplar el código al entorno. y no regalarlas las apis por github
      */
     public function __construct()
     {
-        $this->apiKey        = (string) config('services.lastfm.api_key', '');
-        $this->baseUrl       = (string) config('services.lastfm.base_url', 'http://ws.audioscrobbler.com/2.0/');
-        $this->searchLimit   = (int)    config('services.lastfm.search_limit', 5);
-        $this->cacheTtl      = (int)    config('services.lastfm.cache_ttl', 3600);
+        $this->apiKey = (string) config('services.lastfm.api_key', '');
+        $this->baseUrl = (string) config('services.lastfm.base_url', 'http://ws.audioscrobbler.com/2.0/');
+        $this->searchLimit = (int) config('services.lastfm.search_limit', 5);
+        $this->cacheTtl = (int) config('services.lastfm.cache_ttl', 3600);
         $this->brokenImageMap = (array) config('services.lastfm.broken_image_map', []);
     }
 
@@ -61,7 +61,7 @@ class LastFmService
         $response = $this->request([
             'method' => 'artist.search',
             'artist' => $query,
-            'limit'  => $this->searchLimit,
+            'limit' => $this->searchLimit,
         ]);
 
         $artists = $response['results']['artistmatches']['artist'] ?? [];
@@ -72,9 +72,7 @@ class LastFmService
     /**
      * Busca álbumes por nombre.
      *
-     * CAMBIO: se eliminó mt_rand() para el score. Devuelve null porque Last.fm
-     * no proporciona una puntuación real en la búsqueda; el frontend debe
-     * calcularlo desde datos propios o no mostrarlo.
+     * 
      *
      * @return array{albums: list<array{name: string, artist: string, image: string|null, score: null}>}
      * @throws LastFmApiException
@@ -83,8 +81,8 @@ class LastFmService
     {
         $response = $this->request([
             'method' => 'album.search',
-            'album'  => $query,
-            'limit'  => $this->searchLimit,
+            'album' => $query,
+            'limit' => $this->searchLimit,
         ]);
 
         $albums = $response['results']['albummatches']['album'] ?? [];
@@ -105,8 +103,8 @@ class LastFmService
         $data = $this->request([
             'method' => 'album.getinfo',
             'artist' => $artist,
-            'album'  => $album,
-            'lang'   => 'es',
+            'album' => $album,
+            'lang' => 'es',
         ]);
 
         // Fallback a inglés si no hay wiki en español
@@ -115,7 +113,7 @@ class LastFmService
                 $dataEn = $this->request([
                     'method' => 'album.getinfo',
                     'artist' => $artist,
-                    'album'  => $album,
+                    'album' => $album,
                 ]);
                 if (!empty($dataEn['album']['wiki'])) {
                     $data['album']['wiki'] = $dataEn['album']['wiki'];
@@ -128,15 +126,15 @@ class LastFmService
         $info = $data['album'] ?? [];
 
         return [
-            'title'       => (string) ($info['name']      ?? $album),
-            'artist'      => (string) ($info['artist']    ?? $artist),
-            'plays'       => (int)    ($info['playcount'] ?? 0),
-            'listeners'   => (int)    ($info['listeners'] ?? 0),
-            'image'       => $this->extractBestImage($info['image'] ?? []),
-            'year'        => $this->extractYear($info),
-            'tracks'      => $this->extractTracks($info['tracks']['track'] ?? []),
+            'title' => (string) ($info['name'] ?? $album),
+            'artist' => (string) ($info['artist'] ?? $artist),
+            'plays' => (int) ($info['playcount'] ?? 0),
+            'listeners' => (int) ($info['listeners'] ?? 0),
+            'image' => $this->extractBestImage($info['image'] ?? []),
+            'year' => $this->extractYear($info),
+            'tracks' => $this->extractTracks($info['tracks']['track'] ?? []),
             'description' => $this->extractDescription($info),
-            'tags'        => $this->extractGenreTags($info),
+            'tags' => $this->extractGenreTags($info),
         ];
     }
 
@@ -152,7 +150,7 @@ class LastFmService
             $data = $this->request([
                 'method' => 'artist.getinfo',
                 'artist' => $artistName,
-                'lang'   => 'es',
+                'lang' => 'es',
             ]);
 
             $info = $data['artist'] ?? [];
@@ -167,20 +165,22 @@ class LastFmService
                     if (!empty($dataEn['artist']['bio']['summary'])) {
                         $info['bio'] = $dataEn['artist']['bio'];
                     }
-                } catch (LastFmApiException) {}
+                } catch (LastFmApiException) {
+                }
             }
 
             // Top álbumes del artista
             $albumsData = $this->request([
                 'method' => 'artist.gettopalbums',
                 'artist' => $artistName,
-                'limit'  => 6,
+                'limit' => 6,
             ]);
             $topAlbums = $albumsData['topalbums']['album'] ?? [];
 
             // Tags/géneros
             $tags = $info['tags']['tag'] ?? [];
-            if (isset($tags['name'])) $tags = [$tags];
+            if (isset($tags['name']))
+                $tags = [$tags];
             $genres = array_slice(array_map(
                 fn($t) => ucwords(strtolower($t['name'] ?? '')),
                 (array) $tags
@@ -199,19 +199,19 @@ class LastFmService
             // Álbumes formateados
             $albums = array_map(function ($album) {
                 return [
-                    'name'  => $album['name'] ?? '',
+                    'name' => $album['name'] ?? '',
                     'image' => $this->extractBestImage($album['image'] ?? []),
                 ];
             }, $topAlbums);
 
             return [
-                'name'       => (string) ($info['name'] ?? $artistName),
-                'image'      => $imageUrl,
-                'bio'        => $bio ?: 'Sin biografía disponible.',
-                'genres'     => $genres ?: ['Desconocido'],
-                'listeners'  => (int) ($info['stats']['listeners'] ?? 0),
-                'playcount'  => (int) ($info['stats']['playcount'] ?? 0),
-                'albums'     => $albums,
+                'name' => (string) ($info['name'] ?? $artistName),
+                'image' => $imageUrl,
+                'bio' => $bio ?: 'Sin biografía disponible.',
+                'genres' => $genres ?: ['Desconocido'],
+                'listeners' => (int) ($info['stats']['listeners'] ?? 0),
+                'playcount' => (int) ($info['stats']['playcount'] ?? 0),
+                'albums' => $albums,
             ];
         });
     }
@@ -221,9 +221,7 @@ class LastFmService
     /**
      * Devuelve información de Last.fm para un conjunto de álbumes ya seleccionados.
      *
-     * CAMBIO: la query a ReviewAlbum se ha eliminado del servicio. El controlador
-     * o un repositorio deben llamar primero a la BD y pasar los datos aquí.
-     *
+
      * La clave de caché se genera a partir de un hash de los IDs consultados,
      * por lo que se invalida automáticamente si cambia el conjunto de álbumes.
      *
@@ -253,8 +251,7 @@ class LastFmService
     /**
      * Devuelve los álbumes de la sección "Recomendación de la semana".
      *
-     * CAMBIO: los picks ya no están hardcodeados aquí; vienen de config/services.php.
-     *
+     * 
      * @return list<array<string, mixed>>
      */
     public function getWeeklyRecommendation(): array
@@ -271,7 +268,7 @@ class LastFmService
                     $results[] = $info;
                 } catch (LastFmApiException $e) {
                     Log::warning('LastFm: no se pudo obtener recomendación semanal', [
-                        'pick'  => $pick,
+                        'pick' => $pick,
                         'error' => $e->getMessage(),
                     ]);
                 }
@@ -283,9 +280,6 @@ class LastFmService
 
     /**
      * Devuelve información de Last.fm para álbumes de la sección de reseñas.
-     *
-     * CAMBIO: igual que getFeaturedAlbums(), recibe los datos ya resueltos.
-     * La clave de caché depende del hash de los álbumes pasados.
      *
      * @param  list<array{artist: string, title: string, score: float|string}> $albums
      * @return list<array<string, mixed>>
@@ -320,11 +314,11 @@ class LastFmService
     public function getPopularArtists(): array
     {
         return Cache::remember('popular_artists_dynamic', $this->cacheTtl, function (): array {
-            $data    = $this->request(['method' => 'chart.gettopartists', 'limit' => 10]);
+            $data = $this->request(['method' => 'chart.gettopartists', 'limit' => 10]);
             $artists = $data['artists']['artist'] ?? [];
 
             // Ordenar por listeners descendente antes de procesar
-            usort($artists, fn($a, $b) => (int)($b['listeners'] ?? 0) <=> (int)($a['listeners'] ?? 0));
+            usort($artists, fn($a, $b) => (int) ($b['listeners'] ?? 0) <=> (int) ($a['listeners'] ?? 0));
 
             // Quedarnos solo con los 6 primeros
             $artists = array_slice($artists, 0, 6);
@@ -332,13 +326,13 @@ class LastFmService
             $results = [];
             foreach ($artists as $artistData) {
                 $artistName = (string) ($artistData['name'] ?? '');
-                $listeners  = (int)    ($artistData['listeners'] ?? $artistData['playcount'] ?? 0);
-                $imageUrl   = $this->fetchArtistImageFromSpotify($artistName);
+                $listeners = (int) ($artistData['listeners'] ?? $artistData['playcount'] ?? 0);
+                $imageUrl = $this->fetchArtistImageFromSpotify($artistName);
 
                 $results[] = [
-                    'name'      => $artistName,
+                    'name' => $artistName,
                     'listeners' => (int) $listeners,
-                    'image'     => $imageUrl,
+                    'image' => $imageUrl,
                 ];
             }
 
@@ -354,8 +348,8 @@ class LastFmService
 
         try {
             $response = Http::asForm()->post(config('services.spotify.auth_url'), [
-                'grant_type'    => 'client_credentials',
-                'client_id'     => config('services.spotify.client_id'),
+                'grant_type' => 'client_credentials',
+                'client_id' => config('services.spotify.client_id'),
                 'client_secret' => config('services.spotify.client_secret'),
             ]);
 
@@ -381,13 +375,13 @@ class LastFmService
         return Cache::remember($cacheKey, 3600, function (): array {
             try {
                 $token = $this->getSpotifyToken();
-                
-                // Spotify ha restringido el endpoint /browse/new-releases. Usamos /search como alternativa.
+
+                // Spotify ha restringido el endpoint /browse/new-releases. por lo que tengo que usar /search como alternativa.
                 $response = Http::withToken($token)->get(
                     config('services.spotify.api_url') . '/search',
                     [
-                        'q'       => 'tag:new',
-                        'type'    => 'album',
+                        'q' => 'tag:new',
+                        'type' => 'album',
                     ]
                 );
 
@@ -404,7 +398,7 @@ class LastFmService
                 if (empty($albums)) {
                     \Log::warning('Spotify returned empty albums list');
                 }
-                
+
                 $results = [];
                 foreach ($albums as $album) {
                     $releaseTimestamp = strtotime($album['release_date']);
@@ -426,17 +420,17 @@ class LastFmService
                     }
 
                     $results[] = [
-                        'name'         => $album['name'],
-                        'artist'       => $artistName,
-                        'image'        => $imageUrl,
+                        'name' => $album['name'],
+                        'artist' => $artistName,
+                        'image' => $imageUrl,
                         'release_date' => date('d/m/Y', strtotime($album['release_date'])),
-                        'year'         => date('Y', strtotime($album['release_date'])),
-                        'plays'        => $albumInfo['plays'] ?? 0,
-                        'listeners'    => $albumInfo['listeners'] ?? 0,
-                        'tracks'       => $albumInfo['tracks'] ?? [],
-                        'description'  => $albumInfo['description'] ?? 'Sin descripción disponible.',
-                        'tags'         => $albumInfo['tags'] ?? ['Desconocido'],
-                        'score'        => null,
+                        'year' => date('Y', strtotime($album['release_date'])),
+                        'plays' => $albumInfo['plays'] ?? 0,
+                        'listeners' => $albumInfo['listeners'] ?? 0,
+                        'tracks' => $albumInfo['tracks'] ?? [],
+                        'description' => $albumInfo['description'] ?? 'Sin descripción disponible.',
+                        'tags' => $albumInfo['tags'] ?? ['Desconocido'],
+                        'score' => null,
                     ];
 
                     if (count($results) >= 8) {
@@ -457,9 +451,8 @@ class LastFmService
     /**
      * Realiza una petición GET a la API de Last.fm y devuelve los datos decodificados.
      *
-     * CAMBIO: centraliza el manejo de errores HTTP. Si la respuesta no es 2xx
-     * o la API devuelve un error interno, lanza LastFmApiException.
-     *
+     * 
+     * 
      * @param  array<string, mixed> $params
      * @return array<string, mixed>
      * @throws LastFmApiException
@@ -468,7 +461,7 @@ class LastFmService
     {
         $params = array_merge([
             'api_key' => $this->apiKey,
-            'format'  => 'json',
+            'format' => 'json',
         ], $params);
 
         $method = (string) ($params['method'] ?? 'unknown');
@@ -483,7 +476,7 @@ class LastFmService
             );
         }
 
-        if (! $response->successful()) {
+        if (!$response->successful()) {
             throw new LastFmApiException(
                 "Last.fm [{$method}] devolvió HTTP {$response->status()}",
                 $method
@@ -506,7 +499,6 @@ class LastFmService
     // ─── Formatters privados ───────────────────────────────────────────────────
 
     /**
-     * CAMBIO: lógica de formateo de artista extraída de la lambda inline de array_map.
      *
      * @param  array<string, mixed> $artist
      * @return array{id: string, name: string, country: string, score: int, image: string|null}
@@ -529,28 +521,26 @@ class LastFmService
         }
 
         return [
-            'id'      => (string) ($artist['mbid'] ?? uniqid('', true)),
-            'name'    => (string) ($artist['name'] ?? ''),
+            'id' => (string) ($artist['mbid'] ?? uniqid('', true)),
+            'name' => (string) ($artist['name'] ?? ''),
             'country' => 'Oyentes: ' . number_format((int) ($artist['listeners'] ?? 0)),
-            'score'   => 100, // campo estructural requerido por el contrato del frontend
-            'image'   => $imageUrl,
+            'score' => 100,
+            'image' => $imageUrl,
         ];
     }
 
     /**
-     * CAMBIO: lógica de formateo de álbum en búsqueda extraída de la lambda inline.
-     * score se devuelve como null (antes era mt_rand, que es deshonesto).
-     *
+     * 
      * @param  array<string, mixed> $album
      * @return array{name: string, artist: string, image: string|null, score: null}
      */
     private function formatAlbumSearchResult(array $album): array
     {
         return [
-            'name'   => (string) ($album['name']   ?? ''),
+            'name' => (string) ($album['name'] ?? ''),
             'artist' => (string) ($album['artist'] ?? ''),
-            'image'  => $this->extractBestImage($album['image'] ?? []),
-            'score'  => null,
+            'image' => $this->extractBestImage($album['image'] ?? []),
+            'score' => null,
         ];
     }
 
@@ -590,7 +580,7 @@ class LastFmService
     {
         $tags = $info['tags']['tag'] ?? [];
         if (isset($tags['name'])) {
-            $tags = [$tags]; // Last.fm puede devolver un objeto en lugar de array
+            $tags = [$tags]; // Last.fm puede devolver un objeto en lugar de array es posible pasa en algunos
         }
 
         foreach ((array) $tags as $tag) {
@@ -621,14 +611,14 @@ class LastFmService
         if (isset($tracksData[0])) {
             foreach ($tracksData as $track) {
                 $tracks[] = [
-                    'name'     => (string) ($track['name']     ?? ''),
-                    'duration' => (int)    ($track['duration'] ?? 0),
+                    'name' => (string) ($track['name'] ?? ''),
+                    'duration' => (int) ($track['duration'] ?? 0),
                 ];
             }
         } elseif (isset($tracksData['name'])) {
             $tracks[] = [
-                'name'     => (string) ($tracksData['name']     ?? ''),
-                'duration' => (int)    ($tracksData['duration'] ?? 0),
+                'name' => (string) ($tracksData['name'] ?? ''),
+                'duration' => (int) ($tracksData['duration'] ?? 0),
             ];
         }
 
@@ -671,7 +661,7 @@ class LastFmService
             $rawTags = [$rawTags];
         }
 
-        $ignored  = ['albums i own', 'favorite albums'];
+        $ignored = ['albums i own', 'favorite albums'];
         $genreTags = [];
 
         foreach ((array) $rawTags as $t) {
@@ -689,15 +679,15 @@ class LastFmService
 
     /**
      * Obtiene la imagen del álbum top de un artista como fallback de imagen de artista
-     * (Last.fm dejó de servir imágenes de artistas directamente).
+     * last fm no da imágenes de artistas por lo que se usa la del álbum top
      */
     private function fetchArtistImageFallback(string $artistName): ?string
     {
         try {
-            $data     = $this->request([
+            $data = $this->request([
                 'method' => 'artist.gettopalbums',
                 'artist' => $artistName,
-                'limit'  => 1,
+                'limit' => 1,
             ]);
             $topAlbum = $data['topalbums']['album'][0] ?? null;
             if ($topAlbum) {
@@ -706,7 +696,7 @@ class LastFmService
         } catch (LastFmApiException $e) {
             Log::warning('LastFm: no se pudo obtener imagen de artista', [
                 'artist' => $artistName,
-                'error'  => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -724,8 +714,8 @@ class LastFmService
             $response = Http::withToken($token)->get(
                 config('services.spotify.api_url') . '/search',
                 [
-                    'q'     => $artistName,
-                    'type'  => 'artist',
+                    'q' => $artistName,
+                    'type' => 'artist',
                     'limit' => 1,
                 ]
             );
@@ -740,7 +730,7 @@ class LastFmService
         } catch (\Exception $e) {
             Log::warning('Spotify artist image failed, falling back to Last.fm', [
                 'artist' => $artistName,
-                'error'  => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
 

@@ -319,11 +319,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   get formattedRegistrationDate(): string {
     const fecha = this.user?.fecha_registro || this.user?.created_at;
     if (!fecha) return 'Hace mucho tiempo';
-    
-    // Replace space with T for cross-browser compatibility (e.g. Safari)
+
     const parsedFecha = typeof fecha === 'string' ? fecha.replace(' ', 'T') : fecha;
     const d = new Date(parsedFecha);
-    
+
     if (isNaN(d.getTime())) return 'Hace mucho tiempo';
     const str = d.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
     return str.charAt(0).toUpperCase() + str.slice(1);

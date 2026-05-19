@@ -26,6 +26,7 @@ class AuthController extends Controller
         // Parche temporal para nosotros poder logearnos si las contraseñas originales estaban sin hashear 
         // o no sabemos cuál es. Asumiremos que si la contraseña enviada coincide literalmente, iniciamos.
         // Lo correcto es usar Auth::attempt().
+        // ya que mailsend se ha quedado sin cargas
         if (!$user) {
             return response()->json(['message' => 'Credenciales incorrectas'], 401);
         }
@@ -84,7 +85,8 @@ class AuthController extends Controller
         return response()->json(['message' => 'Email verificado exitosamente']);
     }
 
-    public function user(Request $request) {
+    public function user(Request $request)
+    {
         return response()->json($request->user());
     }
 

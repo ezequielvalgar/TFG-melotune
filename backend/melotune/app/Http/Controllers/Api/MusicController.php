@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Log;
 
 class MusicController extends Controller
 {
-    public function __construct(private readonly LastFmService $musicService) {}
+    public function __construct(private readonly LastFmService $musicService)
+    {
+    }
 
     public function searchArtists(Request $request): JsonResponse
     {
@@ -63,10 +65,10 @@ class MusicController extends Controller
             $response = \Illuminate\Support\Facades\Http::withToken($token)->get(
                 config('services.spotify.api_url') . '/search',
                 [
-                    'q'      => $query,
-                    'type'   => 'album,artist',
+                    'q' => $query,
+                    'type' => 'album,artist',
                     'market' => 'ES',
-                    'limit'  => 5,
+                    'limit' => 5,
                 ]
             );
 
@@ -79,26 +81,26 @@ class MusicController extends Controller
             // Formatear álbumes
             $albums = array_map(function ($album) {
                 return [
-                    'name'   => $album['name'],
+                    'name' => $album['name'],
                     'artist' => $album['artists'][0]['name'] ?? 'Desconocido',
-                    'image'  => $album['images'][0]['url'] ?? null,
-                    'score'  => null,
-                    'type'   => 'album',
+                    'image' => $album['images'][0]['url'] ?? null,
+                    'score' => null,
+                    'type' => 'album',
                 ];
             }, $data['albums']['items'] ?? []);
 
             // Formatear artistas
             $artists = array_map(function ($artist) {
                 return [
-                    'name'      => $artist['name'],
-                    'image'     => $artist['images'][0]['url'] ?? null,
+                    'name' => $artist['name'],
+                    'image' => $artist['images'][0]['url'] ?? null,
                     'followers' => $artist['followers']['total'] ?? 0,
-                    'type'      => 'artist',
+                    'type' => 'artist',
                 ];
             }, $data['artists']['items'] ?? []);
 
             return response()->json([
-                'albums'  => $albums,
+                'albums' => $albums,
                 'artists' => $artists,
             ]);
 
@@ -108,10 +110,7 @@ class MusicController extends Controller
         }
     }
 
-    /**
-     * CAMBIO: la query a ReviewAlbum se resuelve aquí (repositorio mínimo inline)
-     * y el resultado se pasa al servicio, que ya no depende de Eloquent.
-     */
+
     public function featuredAlbums(): JsonResponse
     {
         try {
@@ -143,10 +142,7 @@ class MusicController extends Controller
         }
     }
 
-    /**
-     * CAMBIO: igual que featuredAlbums(), la query Eloquent sale del servicio.
-     * Aquí resolvemos los 5 álbumes con mejor nota media y se los pasamos.
-     */
+
     public function reviewAlbums(): JsonResponse
     {
         try {
@@ -182,10 +178,10 @@ class MusicController extends Controller
             ->get()
             ->map(function ($user) {
                 return [
-                    'id'              => $user->id,
-                    'username'        => $user->username,
-                    'nombre'          => $user->nombre,
-                    'foto_perfil'     => $user->foto_perfil,
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'nombre' => $user->nombre,
+                    'foto_perfil' => $user->foto_perfil,
                     'followers_count' => $user->followersCount(),
                 ];
             });
@@ -196,7 +192,7 @@ class MusicController extends Controller
     public function albumInfo(Request $request): JsonResponse
     {
         $artist = $request->input('artist');
-        $album  = $request->input('album');
+        $album = $request->input('album');
 
         if (!$artist || !$album) {
             return response()->json(['error' => 'Se requiere artist y album'], 400);
@@ -242,7 +238,8 @@ class MusicController extends Controller
             ->get()
             ->map(function (ReviewAlbum $row): ?array {
                 $album = $row->album;
-                if (!$album) return null;
+                if (!$album)
+                    return null;
 
                 $artist = $album->artista_nombre
                     ?? ($album->artista?->nombre ?? null);
@@ -269,15 +266,16 @@ class MusicController extends Controller
             ->get()
             ->map(function (ReviewAlbum $row): ?array {
                 $album = $row->album;
-                if (!$album) return null;
+                if (!$album)
+                    return null;
 
                 $artist = $album->artista_nombre
                     ?? ($album->artista?->nombre ?? null);
 
                 return $artist ? [
                     'artist' => $artist,
-                    'title'  => $album->titulo,
-                    'score'  => (float) $row->media,
+                    'title' => $album->titulo,
+                    'score' => (float) $row->media,
                 ] : null;
             })
             ->filter()

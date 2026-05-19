@@ -1,5 +1,4 @@
 // ─── Interfaces de dominio para MeloTune ───────────────────────────────────
-// Úsalas para tipar los retornos de servicios en lugar de `any`.
 
 export interface Track {
   name: string;

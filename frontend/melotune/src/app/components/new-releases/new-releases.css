@@ -1,6 +1,6 @@
 .nr-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: var(--card-bg, #1e1e2f); /* Assuming mt-card provides base bg, but just in case */
+  background-color: var(--card-bg, #1e1e2f);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 

@@ -1,14 +1,4 @@
-/* ===== Marquee Infinito — 8 álbumes reales + 8 clones = 16 ítems ===== */
-
-/*
-  MATEMÁTICA CORRECTA:
-  - Queremos ver 4 ítems a la vez en el outer (100% del outer)
-  - Cada ítem visible = 25% del outer
-  - Tenemos 16 ítems en total (8 originales + 8 clones)
-  - El track debe tener: 16 × 25% del outer = 400% del outer
-  - La animación mueve -50% del track = -200% del outer = 8 ítems (los originales)
-  - Al resetear, el contenido visible es IDÉNTICO → sin salto
-*/
+/* ===== Marquee Infinito — 8 álbumes reales + 8 clones = 16 ítems  MUY DIFICL DE HACER  ===== */
 
 .marquee-outer {
   overflow: hidden;
@@ -38,7 +28,7 @@
   }
 }
 
-/* 16 ítems en track de 400% del outer → cada ítem = 25% del outer = 6.25% del track */
+/* 16 ítems en track de 400% del outer → cada ítem = 25% del outer = 6.25% del track (dificil) */
 .carousel-item-custom {
   flex: 0 0 6.25%;
   min-width: 6.25%;
